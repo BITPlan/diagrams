@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Diagram Service</title>
+        <link rel="stylesheet" href="/static/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer="" src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Pricing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <div class="leftpage">
+                <!-- Accent-colored raised button with ripple -->
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                Button
+                </button>
+                <form action="/diagrams" method="post">
+                    <p class="row examples">
+                        <span class="label">Examples:</span>
+                        <span class="field">
+                        &nbsp;<button type="button" class="example" data-source="# MSC for some fictional process
+                            msc {
+                            hscale = &quot;2&quot;;
+                            a,b,c;
+                            a->b [ label = &quot;ab()&quot;, URL=&quot;https://example.com/&quot; ] ;
+                            b->c [ label = &quot;bc(TRUE)&quot;];
+                            c=>c [ label = &quot;process(1)&quot; ];
+                            c=>c [ label = &quot;process(2)&quot; ];
+                            ...;
+                            c=>c [ label = &quot;process(n)&quot; ];
+                            c=>c [ label = &quot;process(END)&quot; ];
+                            a<<=c [ label = &quot;callback()&quot;];
+                            ---  [ label = &quot;If more to run&quot;, ID=&quot;*&quot; ];
+                            a->a [ label = &quot;next()&quot;];
+                            a->c [ label = &quot;ac1()\nac2()&quot;];
+                            b<-c [ label = &quot;cb(TRUE)&quot;];
+                            b->b [ label = &quot;stalled(...)&quot;];
+                            a<-b [ label = &quot;ab() = FALSE&quot;];
+                            }
+                            " data-generator="mscgen">
+                        process.mscgen
+                        </button>
+                        &nbsp;<button type="button" class="example" data-source="digraph G {
+                            A -> B -> C
+                            A -> D
+                            B -> E -> F
+                            D [URL=&quot;http://example.org/&quot;, label=&quot;D (linked)&quot;]
+                            }
+                            " data-generator="dot">
+                        tree.dot
+                        </button>
+                        &nbsp;<button type="button" class="example" data-source="@startuml
+                            Alice -> Bob: test
+                            @enduml
+                            " data-generator="plantuml">
+                        sequence-diagram.plantuml
+                        </button>
+                        &nbsp;<button type="button" class="example" data-source="digraph g {
+                            graph [
+                            rankdir = &quot;LR&quot;
+                            bgcolor = &quot;white:lightblue&quot;
+                            style=&quot;filled&quot;
+                            gradientangle = 270];
+                            node [
+                            fontsize = &quot;16&quot;
+                            shape = &quot;ellipse&quot;
+                            style=&quot;filled&quot;
+                            gradientangle=90
+                            ];
+                            edge [
+                            ];
+                            &quot;node0&quot; [
+                            label = &quot;<f0> 0x10ba8| <f1>&quot;
+                            shape = &quot;record&quot;
+                            gradientangle=&quot;90&quot;
+                            fillcolor = &quot;yellow:blue&quot;
+                            ];
+                            &quot;node1&quot; [
+                            label = &quot;<f0> 0xf7fc4380| <f1> | <f2> |-1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;blue:red&quot;
+                            gradientangle = 0
+                            ];
+                            &quot;node2&quot; [
+                            label = &quot;<f0> 0xf7fc44b8| | |2&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;brown:yellow&quot;
+                            gradientangle = 90
+                            ];
+                            &quot;node3&quot; [
+                            label = &quot;<f0> 3.43322790286038071e-06|44.79998779296875|0 | <f1>&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;green:red&quot;
+                            gradientangle = 90
+                            ];
+                            &quot;node4&quot; [
+                            label = &quot;<f0> 0xf7fc4380| <f1> | <f2> |2&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;red:green&quot;
+                            gradientangle = 0
+                            ];
+                            &quot;node5&quot; [
+                            label = &quot;<f0> (nil)| | |-1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;red:red&quot;
+                            gradientangle = 90
+                            ];
+                            &quot;node6&quot; [
+                            label = &quot;<f0> 0xf7fc4380| <f1> | <f2> |1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;orange:green&quot;
+                            ];
+                            &quot;node7&quot; [
+                            label = &quot;<f0> 0xf7fc4380| <f1> | <f2> |2&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;cyan:green&quot;
+                            ];
+                            &quot;node8&quot; [
+                            label = &quot;<f0> (nil)| | |-1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;cyan:cyan&quot;
+                            ];
+                            &quot;node9&quot; [
+                            label = &quot;<f0> (nil)| | |-1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;orange:orange&quot;
+                            gradientangle = 90
+                            ];
+                            &quot;node10&quot; [
+                            label = &quot;<f0> (nil)| <f1> | <f2> |-1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;magenta:green&quot;
+                            ];
+                            &quot;node11&quot; [
+                            label = &quot;<f0> (nil)| <f1> | <f2> |-1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;red:green&quot;
+                            ];
+                            &quot;node12&quot; [
+                            label = &quot;<f0> 0xf7fc43e0| | |1&quot;
+                            shape = &quot;record&quot;
+                            fillcolor = &quot;magenta:magenta&quot;
+                            ];
+                            &quot;node0&quot;:f0 -> &quot;node1&quot;:f0 [
+                            id = 0
+                            ];
+                            &quot;node0&quot;:f1 -> &quot;node2&quot;:f0 [
+                            id = 1
+                            ];
+                            &quot;node1&quot;:f0 -> &quot;node3&quot;:f0 [
+                            id = 2
+                            ];
+                            &quot;node1&quot;:f1 -> &quot;node4&quot;:f0 [
+                            id = 3
+                            ];
+                            &quot;node1&quot;:f2 -> &quot;node5&quot;:f0 [
+                            id = 4
+                            ];
+                            &quot;node4&quot;:f0 -> &quot;node3&quot;:f1 [
+                            id = 5
+                            ];
+                            &quot;node4&quot;:f1 -> &quot;node6&quot;:f0 [
+                            id = 6
+                            ];
+                            &quot;node4&quot;:f2 -> &quot;node10&quot;:f0 [
+                            id = 7
+                            ];
+                            &quot;node6&quot;:f0 -> &quot;node3&quot;:f1 [
+                            id = 8
+                            ];
+                            &quot;node6&quot;:f1 -> &quot;node7&quot;:f0 [
+                            id = 9
+                            ];
+                            &quot;node6&quot;:f2 -> &quot;node9&quot;:f0 [
+                            id = 10
+                            ];
+                            &quot;node7&quot;:f0 -> &quot;node3&quot;:f1 [
+                            id = 11
+                            ];
+                            &quot;node7&quot;:f1 -> &quot;node1&quot;:f0 [
+                            id = 12
+                            ];
+                            &quot;node7&quot;:f2 -> &quot;node8&quot;:f0 [
+                            id = 13
+                            ];
+                            &quot;node10&quot;:f1 -> &quot;node11&quot;:f0 [
+                            id = 14
+                            ];
+                            &quot;node10&quot;:f2 -> &quot;node12&quot;:f0 [
+                            id = 15
+                            ];
+                            &quot;node11&quot;:f2 -> &quot;node1&quot;:f0 [
+                            id = 16
+                            ];
+                            }
+                            " data-generator="dot">
+                        pdatastruct.dot
+                        </button>
+                        </span>
+                    </p>
+                    <p class="row">
+                        <label class="label" for="generator">Generator:</label>
+                        <span class="field">
+                            <select name="generator" id="generator">
+                                {% for gen in gens %}
+                                <optgroup label="{{gen.name}}">
+                                    {% for alias in gen.aliases %}
+                                    <option value="{{alias}}">{{alias}}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                {% endfor %}
+                                <optgroup label="Graphviz" data-gen-group="graphviz">
+                                    <option value="dot">
+                                        dot
+                                    </option>
+                                    <option value="neato">
+                                        neato
+                                    </option>
+                                    <option value="twopi">
+                                        twopi
+                                    </option>
+                                    <option value="circo">
+                                        circo
+                                    </option>
+                                    <option value="fdp">
+                                        fdp
+                                    </option>
+                                    <option value="sfdp">
+                                        sfdp
+                                    </option>
+                                    <option value="patchwork">
+                                        patchwork
+                                    </option>
+                                    <option value="osage">
+                                        osage
+                                    </option>
+                                </optgroup>
+                                <optgroup label="Mscgen" data-gen-group="mscgen">
+                                    <option value="mscgen">
+                                        mscgen
+                                    </option>
+                                </optgroup>
+                                <optgroup label="PlantUML" data-gen-group="plantuml">
+                                    <option value="plantuml">
+                                        plantuml
+                                    </option>
+                                </optgroup>
+                            </select>
+                        </span>
+                    </p>
+                    <p class="row">
+                        <label class="label" for="types">Output types:</label>
+                        <span class="field">
+                        <span class="gen-types gen-types-graphviz">
+                        <label for="type-graphviz-dot">
+                        <input id="type-graphviz-dot" type="checkbox" value="dot" name="types[]">
+                        dot
+                        </label>
+                        <label for="type-graphviz-xdot">
+                        <input id="type-graphviz-xdot" type="checkbox" value="xdot" name="types[]">
+                        xdot
+                        </label>
+                        <label for="type-graphviz-ps">
+                        <input id="type-graphviz-ps" type="checkbox" value="ps" name="types[]">
+                        ps
+                        </label>
+                        <label for="type-graphviz-pdf">
+                        <input id="type-graphviz-pdf" type="checkbox" value="pdf" name="types[]">
+                        pdf
+                        </label>
+                        <label for="type-graphviz-svg">
+                        <input id="type-graphviz-svg" type="checkbox" value="svg" name="types[]">
+                        svg
+                        </label>
+                        <label for="type-graphviz-fig">
+                        <input id="type-graphviz-fig" type="checkbox" value="fig" name="types[]">
+                        fig
+                        </label>
+                        <label for="type-graphviz-png">
+                        <input id="type-graphviz-png" type="checkbox" value="png" name="types[]">
+                        png
+                        </label>
+                        <label for="type-graphviz-gif">
+                        <input id="type-graphviz-gif" type="checkbox" value="gif" name="types[]">
+                        gif
+                        </label>
+                        <label for="type-graphviz-jpg">
+                        <input id="type-graphviz-jpg" type="checkbox" value="jpg" name="types[]">
+                        jpg
+                        </label>
+                        <label for="type-graphviz-json">
+                        <input id="type-graphviz-json" type="checkbox" value="json" name="types[]">
+                        json
+                        </label>
+                        <label for="type-graphviz-imap">
+                        <input id="type-graphviz-imap" type="checkbox" value="imap" name="types[]">
+                        imap
+                        </label>
+                        <label for="type-graphviz-cmapx">
+                        <input id="type-graphviz-cmapx" type="checkbox" value="cmapx" name="types[]">
+                        cmapx
+                        </label>
+                        </span>
+                        <span class="gen-types gen-types-mscgen">
+                        <label for="type-mscgen-png">
+                        <input id="type-mscgen-png" type="checkbox" value="png" name="types[]">
+                        png
+                        </label>
+                        <label for="type-mscgen-eps">
+                        <input id="type-mscgen-eps" type="checkbox" value="eps" name="types[]">
+                        eps
+                        </label>
+                        <label for="type-mscgen-svg">
+                        <input id="type-mscgen-svg" type="checkbox" value="svg" name="types[]">
+                        svg
+                        </label>
+                        <label for="type-mscgen-ismap">
+                        <input id="type-mscgen-ismap" type="checkbox" value="ismap" name="types[]">
+                        ismap
+                        </label>
+                        </span>
+                        <span class="gen-types gen-types-plantuml">
+                        <label for="type-plantuml-png">
+                        <input id="type-plantuml-png" type="checkbox" value="png" name="types[]">
+                        png
+                        </label>
+                        <label for="type-plantuml-svg">
+                        <input id="type-plantuml-svg" type="checkbox" value="svg" name="types[]">
+                        svg
+                        </label>
+                        <label for="type-plantuml-eps">
+                        <input id="type-plantuml-eps" type="checkbox" value="eps" name="types[]">
+                        eps
+                        </label>
+                        <label for="type-plantuml-pdf">
+                        <input id="type-plantuml-pdf" type="checkbox" value="pdf" name="types[]">
+                        pdf
+                        </label>
+                        <label for="type-plantuml-vdx">
+                        <input id="type-plantuml-vdx" type="checkbox" value="vdx" name="types[]">
+                        vdx
+                        </label>
+                        <label for="type-plantuml-xmi">
+                        <input id="type-plantuml-xmi" type="checkbox" value="xmi" name="types[]">
+                        xmi
+                        </label>
+                        <label for="type-plantuml-scxml">
+                        <input id="type-plantuml-scxml" type="checkbox" value="scxml" name="types[]">
+                        scxml
+                        </label>
+                        <label for="type-plantuml-html">
+                        <input id="type-plantuml-html" type="checkbox" value="html" name="types[]">
+                        html
+                        </label>
+                        <label for="type-plantuml-txt">
+                        <input id="type-plantuml-txt" type="checkbox" value="txt" name="types[]">
+                        txt
+                        </label>
+                        <label for="type-plantuml-utxt">
+                        <input id="type-plantuml-utxt" type="checkbox" value="utxt" name="types[]">
+                        utxt
+                        </label>
+                        <label for="type-plantuml-latex">
+                        <input id="type-plantuml-latex" type="checkbox" value="latex" name="types[]">
+                        latex
+                        </label>
+                        <label for="type-plantuml-latex:nopreamble">
+                        <input id="type-plantuml-latex:nopreamble" type="checkbox" value="latex:nopreamble" name="types[]">
+                        latex:nopreamble
+                        </label>
+                        </span>
+                        </span>
+                    </p>
+                    <p class="row">
+                        <label class="label" for="source">Source code:</label>
+                        <textarea class="field" id="source" name="source" rows="32" cols="160">
+                        </textarea>
+                    </p>
+                    <p class="row">
+                        <span class="label"></span>
+                        <span class="field"><input type="submit" value="Render"></span>
+                    </p>
+                </form>
+            </div>
+            <div class="rightpage">
+                <p class="output-area">Output area</p>
+            </div>
+        </main>
+        <footer>
+            <ul>
+                <li><a href="https://github.com/samwilson/diagram-service">Diagram Service ead0d7f</a></li>
+            </ul>
+        </footer>
+        <script type="application/javascript" src="/static/js/script.js"></script>
+    </body>
+</html>

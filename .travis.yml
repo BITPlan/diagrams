@@ -1,0 +1,13 @@
+- language: python
+   dist: xenial
+   python: 3.7
+   before_script:
+      ./install
+      addons:
+        apt:
+          packages:
+            - openjdk-8-jdk
+
+  script:
+    - python -m unittest discover
+
