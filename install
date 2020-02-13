@@ -8,10 +8,20 @@ autoinstall() {
   then
     echo "$l_cmd is not installed" 1>&2
     echo "auto-installing it"
-    sudo apt-get install $l_package
+    inst="sudo apt-get install"
+    os=$(uname -a)
+    case $os in
+      Darwin*) inst="sudo port install"
+    esac
+    $inst $l_package
   fi
 }
 autoinstall dot graphviz
 autoinstall mscgen mscgen
 autoinstall java openjdk-8-jdk
+if [ ! -f plantuml.jar ]
+then
+  echo "downloading plantuml"
+  curl -L http://sourceforge.net/projects/plantuml/files/plantuml.jar/download -o plantuml.jar
+fi
 pip3 install -r dgs/requirements.txt
