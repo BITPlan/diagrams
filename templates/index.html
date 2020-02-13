@@ -13,6 +13,27 @@
         <link href="css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/diagrams.css">
         <script>
+            function setDisplay(id,display) {
+              var el=document.getElementById(id);
+              if (el) el.style.display=display;
+            }
+            function onGeneratorChange(selector) {
+              var value=selector.value;
+              var generator='plantuml';
+              {% for igen in gens %}
+              setDisplay("{{igen.id}}-outputTypes","none");
+              {% endfor %}
+              switch (value) {
+                  {% for igen in gens %}
+                    {% for alias in igen.aliases %}
+                  case '{{alias}}':
+                     generator='{{igen.id}}'
+                  break;
+                    {% endfor %}
+                  {% endfor %}
+              }
+              setDisplay(generator+"-outputTypes","block");
+            }
             function readExample() {
             	var selector = document.getElementById("generatorselect");
             	var example = selector.options[selector.selectedIndex].value.trim();
@@ -50,9 +71,9 @@
                     </div>
                     <div id="generatorcol" class="col-md-6">
                     	<button type='submit' id="render">render</button>
-                        <select name="generator" id="generatorselect">
+                        <select name="generator" id="generatorselect" onchange="onGeneratorChange(this)">
                             {% for igen in gens %}
-                            <optgroup label="{{igen.name}}">
+                            <optgroup id="{{igen.id}}-optgroup" label="{{igen.name}}">
                                 {% for alias in igen.aliases %}
                                 <option value="{{alias}}" name="{{alias}}" {% if gen ==alias  %} selected {% endif %}>{{alias}}</option>
                                 {% endfor %}
