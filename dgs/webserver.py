@@ -7,11 +7,13 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from dgs.diagrams import Generators, Example
+import os
 
 debug=True
 port=5003
 host='0.0.0.0'
-app = Flask(__name__,static_url_path='',static_folder='../web', template_folder='../templates')
+scriptdir=os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__,static_url_path='',static_folder=scriptdir+'/../web', template_folder=scriptdir+'/../templates')
 
 @app.route('/')
 def home():
