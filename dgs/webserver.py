@@ -17,8 +17,8 @@ app = Flask(__name__,static_url_path='',static_folder='../web', template_folder=
 def home():
     return index()
     
-def index(err=None):    
-    return render_template('index.html',gens=Generators.generators(),err=err)
+def index(err=None,gen='dot',source="",message=""):    
+    return render_template('index.html',gen=gen,gens=Generators.generators(),err=err, message=message, source=source)
 
 @app.route('/example/<generator>')
 def example(generator):
@@ -28,12 +28,14 @@ def example(generator):
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests
 def form_example():
     err=None
+    message=""
     if request.method == 'POST':
         try:
             source = request.form.get('source')
+            gen=request.form.get('generator')
         except Exception as ex:
             err=ex
-    return index(err=err)
+    return index(err=err, message=message,source=source,gen=gen)
 
 if __name__ == '__main__':
     app.run(debug=debug,port=port,host=host)   

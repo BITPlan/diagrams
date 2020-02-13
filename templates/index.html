@@ -51,10 +51,10 @@
                     <div id="generatorcol" class="col-md-3">
                     	<button type='submit' id="render">render</button>
                         <select name="generator" id="generatorselect">
-                            {% for gen in gens %}
+                            {% for igen in gens %}
                             <optgroup label="{{gen.name}}">
-                                {% for alias in gen.aliases %}
-                                <option value="{{alias}}">{{alias}}</option>
+                                {% for alias in igen.aliases %}
+                                <option value="{{alias}}" name="{{alias}}" {% if gen ==alias  %} selected {% endif %}>{{alias}}</option>
                                 {% endfor %}
                             </optgroup>
                             {% endfor %}
@@ -67,8 +67,7 @@
                         <label class="label" for="source">Source code:</label>
                     </div>
                     <div class="col-md-10">     
-                        <textarea id="source" name="source" rows="24" cols="80">
-                        </textarea>
+                        <textarea id="source" name="source" rows="24" cols="80">{{ source }}</textarea>
                      </div>
                 </div>
             </form>
