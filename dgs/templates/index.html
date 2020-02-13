@@ -12,19 +12,45 @@
         <!--  Material design icons see https://materialdesignicons.com/getting-started -->
         <link href="css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/diagrams.css">
+        <script>
+            function readExample() {
+            	var selector = document.getElementById("generatorselect");
+            	var example = selector.options[selector.selectedIndex].value.trim();
+             	fetch('/example/'+example)
+             		.then(
+             			response => {
+             				return response.text();
+             			}
+            		)
+             		.then(
+             			text => {
+             				var sourceTextArea=document.getElementById('source');
+            				sourceTextArea.value=text;
+             				// console.log(text);
+             			}
+             		)
+             		.catch(
+             			error => {
+             				// alert(error);
+             				console.error(error);
+             			}
+             		);
+            }
+        </script>
     </head>
     <body>
         {% include 'menu.html' %}
         <div id="navigationbox" title="Diagrams-Services">Diagrams-Service</div>
         <div class="container-fluid" id="contentbox">
-        <br>
+            <br>
             <form action="/diagrams" method="post">
                 <div class="row">
                     <div id="generatorlabel" class="col-md-1 text-right">
                         <label class="label" for="generator">Generator:</label>
                     </div>
-                    <div id="generatorselect" class="col-md-2">   
-                        <select name="generator" id="generator">
+                    <div id="generatorcol" class="col-md-3">
+                    	<button type='submit' id="render">render</button>
+                        <select name="generator" id="generatorselect">
                             {% for gen in gens %}
                             <optgroup label="{{gen.name}}">
                                 {% for alias in gen.aliases %}
@@ -33,16 +59,17 @@
                             </optgroup>
                             {% endfor %}
                         </select>
+                        <button type='button' id="readexample" onclick="readExample()">example</button>
                     </div>
-                </div>        
-                 <div class="row">
+                </div>
+                <div class="row">
                     <div id="sourcelabel" class="col-md-1 text-right">        
                         <label class="label" for="source">Source code:</label>
                     </div>
                     <div class="col-md-10">     
-                        <textarea  id="source" name="source" rows="24" cols="80">
+                        <textarea id="source" name="source" rows="24" cols="80">
                         </textarea>
-                    </div>
+                     </div>
                 </div>
             </form>
             <div class="row">

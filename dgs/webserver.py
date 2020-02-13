@@ -6,6 +6,8 @@ Created on 13 Feb 2020
 from flask import Flask
 from flask import render_template
 from flask import request
+from pathlib import Path
+import os.path
 from dgs.diagrams import Generators
 
 debug=True
@@ -19,6 +21,15 @@ def home():
     
 def index(err=None):    
     return render_template('index.html',gens=Generators.generators(),err=err)
+
+@app.route('/example/<generator>')
+def example(generator):
+    example="web/examples/example.%s" % generator
+    if os.path.isfile(example):
+        txt = Path(example).read_text()
+    else:    
+        txt="no example for %s found" % generator    
+    return txt
 
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests
 def form_example():
