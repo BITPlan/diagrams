@@ -1,3 +1,17 @@
 #!/bin/bash
 # WF 2020-02-13
+autoinstall() {
+  local l_cmd="$1"
+  local l_package="$1"
+  which $l_cmd>/dev/null
+  if [ $? -ne 0 ]
+  then
+    echo "$l_cmd is not installed" 1>&2
+    echo "auto-installing it"
+    sudo apt-get install $l_package
+  fi
+}
+autoinstall dot graphviz
+autoinstall mscgen mscgen
+autoinstall java openjdk-8-jdk
 pip3 install -r dgs/requirements.txt
