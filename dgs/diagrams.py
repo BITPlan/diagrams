@@ -64,21 +64,26 @@ class Generators(object):
     @staticmethod
     def generators():
         gens=[
-            Generator("GraphViz","dot","-V",url="https://www.graphviz.org/",
+            Generator("graphviz","GraphViz","dot","-V",url="https://www.graphviz.org/",
                       aliases=[ 'dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork', 'osage' ],
                       defaultType='png',
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
-            Generator("Mscgen","mscgen","",url="http://www.mcternan.me.uk/mscgen/",defaultType='png',outputTypes=['png', 'eps', 'svg', 'ismap']),
-            Generator("PlantUML","java -jar plantuml.jar","-version",aliases=['plantuml'],url="https://plantuml.com",download="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download")
+            Generator("mscgen","Mscgen","mscgen","",url="http://www.mcternan.me.uk/mscgen/",defaultType='png',outputTypes=['png', 'eps', 'svg', 'ismap']),
+            Generator("plantuml","PlantUML","java -jar plantuml.jar","-version",aliases=['plantuml'],url="https://plantuml.com",
+               defaultType='png',
+               download="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download",
+               outputTypes=['png','svg','eps', 'pdf', 'vdx', 'xmi', 'scxml', 'html', 'txt', 'utxt',
+			'latex', 'latex:nopreamble'])
         ]
         return gens
 
 class Generator(object):
     """ a diagram generator """
 
-    def __init__(self,name,cmd,versionOption,url=None,download=None,defaultType=None,aliases=None,outputTypes=None, debug=False):
+    def __init__(self,id,name,cmd,versionOption,url=None,download=None,defaultType=None,aliases=None,outputTypes=None, debug=False):
         """ construct me """
+        self.id=id
         self.name=name
         self.cmd=cmd
         self.url=url
@@ -89,6 +94,7 @@ class Generator(object):
         else:
             self.aliases=aliases
         self.defaultType=defaultType
+        self.selectedType=defaultType
         self.outputTypes=outputTypes
         self.debug=debug
         pass

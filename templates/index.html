@@ -48,7 +48,7 @@
                     <div id="generatorlabel" class="col-md-1 text-right">
                         <label class="label" for="generator">Generator:</label>
                     </div>
-                    <div id="generatorcol" class="col-md-3">
+                    <div id="generatorcol" class="col-md-6">
                     	<button type='submit' id="render">render</button>
                         <select name="generator" id="generatorselect">
                             {% for igen in gens %}
@@ -60,6 +60,20 @@
                             {% endfor %}
                         </select>
                         <button type='button' id="readexample" onclick="readExample()">example</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="outputTypeLabel" class="col-md-1 text-right">
+                        <label class="label">Output:</label>
+                    </div>
+                    <div id="outputTypeCol" class="col-md-6">
+                        {% for igen in gens %}
+                          <fieldset id='{{igen.id}}-outputTypes'>
+                          {% for outputType in igen.outputTypes %}
+                            <input type="radio" id="{{igen.id}}-output-{{outputType}}" name="{{igen.id}}-output" value="{{outputType}}" {% if igen.selectedType ==outputType  %} checked {% endif %}>&nbsp;{{outputType}}
+                          {% endfor %}
+                          </fieldset>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="row">
