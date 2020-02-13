@@ -1,16 +1,15 @@
 '''
-Created on 13 Feb 2020
+Created on 2020-02-13
 
 @author: wf
 '''
 import unittest
-from dgs.diagrams import Command,Diagrams,Generators
-
+from dgs.diagrams import Command,Generators,Example
+debug=False
 class Test(unittest.TestCase):
 
 
     def setUp(self):
-        self.diagrams=Diagrams()
         pass
 
     def tearDown(self):
@@ -27,6 +26,14 @@ class Test(unittest.TestCase):
         for gen in Generators.generators():
             gen.debug=True
             gen.check()
+            
+    def testExamples(self):
+        for gen in Generators.generators():
+            for alias in gen.aliases:
+                txt=Example.get(alias)
+                if debug:
+                    print (txt)
+                assert not "no example for" in txt
 
 
 if __name__ == "__main__":

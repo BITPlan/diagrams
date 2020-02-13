@@ -6,14 +6,12 @@ Created on 13 Feb 2020
 from flask import Flask
 from flask import render_template
 from flask import request
-from pathlib import Path
-import os.path
-from dgs.diagrams import Generators
+from dgs.diagrams import Generators, Example
 
 debug=True
 port=5003
 host='0.0.0.0'
-app = Flask(__name__,static_url_path='',static_folder='web')
+app = Flask(__name__,static_url_path='',static_folder='../web', template_folder='../templates')
 
 @app.route('/')
 def home():
@@ -24,11 +22,7 @@ def index(err=None):
 
 @app.route('/example/<generator>')
 def example(generator):
-    example="web/examples/example.%s" % generator
-    if os.path.isfile(example):
-        txt = Path(example).read_text()
-    else:    
-        txt="no example for %s found" % generator    
+    txt=Example.get(generator)
     return txt
 
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests

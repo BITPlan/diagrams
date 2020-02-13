@@ -2,6 +2,18 @@
 from subprocess import Popen,PIPE
 from sys import platform
 from os.path import expanduser
+from pathlib import Path
+import os.path
+
+class Example(object):
+    @staticmethod
+    def get(generator):
+        example="../web/examples/example.%s" % generator
+        if os.path.isfile(example):
+            txt = Path(example).read_text()
+        else:    
+            txt="no example for %s found" % generator    
+        return txt
 
 class Command(object):
     """ a command to be run using the shell environment """
@@ -58,7 +70,7 @@ class Generators(object):
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
             Generator("Mscgen","mscgen","",url="http://www.mcternan.me.uk/mscgen/",defaultType='png',outputTypes=['png', 'eps', 'svg', 'ismap']),
-            Generator("PlantUML","java -jar ../plantuml.jar","-version",url="https://plantuml.com",download="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download")
+            Generator("PlantUML","java -jar ../plantuml.jar","-version",aliases=['plantuml'],url="https://plantuml.com",download="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download")
         ]   
         return gens
     
