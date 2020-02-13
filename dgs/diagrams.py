@@ -1,6 +1,5 @@
 
 from subprocess import Popen,PIPE
-from notebook.jstest import TimeoutExpired
 from sys import platform
 from os.path import expanduser
 
@@ -25,7 +24,7 @@ class Command(object):
                 if stderr is not None:
                     print("stderr: %s" % stderr.decode('utf-8'))
             return stdout,stderr    
-        except TimeoutExpired:
+        except Exception:
             process.kill()    
             return None,None
     
