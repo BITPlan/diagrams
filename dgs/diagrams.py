@@ -80,7 +80,7 @@ class Command(object):
                 stdoutTxt=stdout.decode("utf-8")
             if stderr is not None:
                 stderrTxt=stderr.decode("utf-8")
-            if not "command not found" in stderrTxt and not "No such file or directory" in stderrTxt:
+            if not "not found" in stderrTxt and not "No such file or directory" in stderrTxt:
                 self.cmdpath=cmdpath
                 return stdoutTxt,stderrTxt
         return None,None
