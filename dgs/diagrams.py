@@ -98,6 +98,13 @@ class Generators(object):
         return gen
 
     @staticmethod
+    def generatorIdForAlias(alias):
+        for gen in Generators.generators():
+            if alias in gen.aliases:
+                return gen.id
+        return None
+    
+    @staticmethod
     def generators():
         scriptdir=os.path.dirname(os.path.abspath(__file__))
         for plantumlpath in [".",".."]:
@@ -123,6 +130,33 @@ class Generators(object):
         ]
         return gens
 
+class GenerateResult(object):
+    def __init__(self,crc32,outputType,path,stdout,stderr):
+        self.crc32=crc32;
+        self.outputType=outputType;
+        self.path=path;
+        self.stdout=stdout
+        self.stderr=stderr
+       
+    def errMsg(self):
+        msg=""
+        if self.stdout is not None:
+            msg=msg+self.stdout.decode('utf-8')
+        if self.stderr is not None:
+            msg=msg+self.stderr.decode('utf-8')
+        return msg          
+    
+    def asHtml(self):
+        url='/render/%s/%s' % (self.outputType,self.crc32)
+        if self.outputType in ['png']:
+            return "<img src='%s'>" % url;
+        else:
+            return "<a href='%s'>%s %s</a>" % (url,self.outputType,self.crc32)
+        
+    def isValid(self):
+        valid=os.path.isfile(self.path) and not self.errMsg()
+        return valid    
+        
 class Generator(object):
     """ a diagram generator """
     @staticmethod
@@ -190,13 +224,15 @@ class Generator(object):
         """ generate """
         hashId=Generator.getHash(txt)
         inputPath="%s%s.%s" % (Generator.getOutputDirectory(),hashId,'txt')
+        stdout=None
+        stderr=None   
         if not (os.path.isfile(inputPath) and  useCached):
             with open(inputPath, "w") as text_file:
                 text_file.write("%s" % txt)
         outputPath="%s%s.%s" % (Generator.getOutputDirectory(),hashId,outputType)
         if os.path.isfile(outputPath) and useCached:
             if self.debug:
-                print("cached %s #%s from %s"  % (outputType,hashId,outputPath))    
+                print("cached %s #%s from %s"  % (outputType,hashId,outputPath))     
         else:         
             if self.debug:
                 print("generating %s #%s to %s" % (outputType,hashId,outputPath))
@@ -209,5 +245,6 @@ class Generator(object):
                 alias=self.cmd    
             if self.gencmd is None:
                 self.check()
-            self.gencmd.callalias(alias,args)           
-        return outputPath    
+            stdout,stderr=self.gencmd.callalias(alias,args)    
+        result=GenerateResult(hashId,outputType,outputPath,stdout,stderr)     
+        return result

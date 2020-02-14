@@ -113,9 +113,14 @@
                     <div id="sourcelabel" class="col-md-1 text-right">
                         <label class="label" for="source">Source code:</label>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-5">
                         <textarea id="source" name="source" rows="24" cols="80">{{ source }}</textarea>
                      </div>
+                    <div class="col-md-6">
+                    {% if genResult %}
+                    {{genResult.asHtml()|safe}}
+                    {% endif %}
+                    </div> 
                 </div>
             </form>
             <div class="row">

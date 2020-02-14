@@ -40,6 +40,13 @@ class TestDiagrams(unittest.TestCase):
             version=gen.getVersion()    
             if debug:
                 print(version)    
+                
+    def testGeneratorForAlias(self):
+        for gen in Generators.generators():
+            gen.debug=debug
+            for alias in gen.aliases:
+                genid=Generators.generatorIdForAlias(alias)
+                assert genid==gen.id
             
     def testExamples(self):
         for gen in Generators.generators():
@@ -56,7 +63,11 @@ class TestDiagrams(unittest.TestCase):
             gen.debug=debug
             for alias in gen.aliases:
                 txt=Example.get(alias)
-                gen.generate(alias,txt,gen.defaultType)
+                result=gen.generate(alias,txt,gen.defaultType)
+                valid =result.isValid()
+                if not valid:
+                    print(result.errMsg())
+                assert valid
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testDiagrams']
