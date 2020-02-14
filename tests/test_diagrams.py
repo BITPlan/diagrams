@@ -33,7 +33,7 @@ class Test(unittest.TestCase):
                 txt=Example.get(alias)
                 if debug:
                     print (txt)
-                assert not "no example for" in txt
+                assert not "no example for" in txt            
 
 
 if __name__ == "__main__":
