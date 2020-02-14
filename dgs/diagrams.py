@@ -5,7 +5,6 @@ from pathlib import Path
 import os.path
 import sys
 import re
-from gremlin_python.process.graph_traversal import out
 
 class Example(object):
     """ Example handling """
@@ -74,7 +73,7 @@ class Generators(object):
         gen=None
         if generator in Generators.generatorDict:
             gen=Generators.generatorDict[generator]
-        return gen        
+        return gen
 
     @staticmethod
     def generators():
@@ -124,7 +123,7 @@ class Generator(object):
         self.outputTypes=outputTypes
         self.debug=debug
         pass
-    
+
     def getHtmlInfo(self):
         if self.htmlInfo is None:
             version=self.getVersion()
@@ -135,17 +134,17 @@ class Generator(object):
         """ check my version"""
         cmd=Command(self.cmd,self.versionOption,debug=self.debug)
         return cmd.check()
-    
-    def getVersion(self):    
+
+    def getVersion(self):
         stdOutText,stdErrText=self.check()
         outputText=stdOutText+stdErrText
         found=re.search(r'version.*[,)]',outputText)
         if found:
             version=found.group()
         else:
-            version=outputText    
+            version=outputText
         return version
-    
+
     @staticmethod
     def getHash(txt):
         hashValue=hash(txt)
@@ -153,14 +152,13 @@ class Generator(object):
         hashValue+=sys.maxsize+1
         hashId=hex(hashValue)
         return hashId
-    
+
     def generate(self,txt,outputType):
         """ generate """
         hashId=Generator.getHash(txt)
         outputPath="%s%s.%s" % (Generator.getOutputDirectory(),hashId,outputType)
         if self.debug:
             print("generating %s #%s to %s" % (outputType,hashId,outputPath))
-        args="%s -T %s -o  %s" % (self.cmd,outputType,outputPath)    
-        cmd=Command(self.cmd,self.versionOption,debug=self.debug)    
+        args="%s -T %s -o  %s" % (self.cmd,outputType,outputPath)
+        cmd=Command(self.cmd,self.versionOption,debug=self.debug)
         cmd.call(args)
-        
