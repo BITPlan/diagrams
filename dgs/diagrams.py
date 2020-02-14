@@ -148,7 +148,7 @@ class GenerateResult(object):
     
     def asHtml(self):
         url='/render/%s/%s' % (self.outputType,self.crc32)
-        if self.outputType in ['png']:
+        if self.outputType in ['gif','jpg','png','svg']:
             return "<img src='%s'>" % url;
         else:
             return "<a href='%s'>%s %s</a>" % (url,self.outputType,self.crc32)
