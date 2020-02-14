@@ -3,7 +3,6 @@ from sys import platform
 from os.path import expanduser
 from pathlib import Path
 import os.path
-import sys
 import zlib
 import re
 
@@ -100,6 +99,13 @@ class Generators(object):
 
     @staticmethod
     def generators():
+        scriptdir=os.path.dirname(os.path.abspath(__file__))
+        for plantumlpath in [".",".."]:
+            plantumljar=scriptdir+"/"+plantumlpath+"/plantuml.jar";
+            if os.path.isfile(plantumljar):
+                break;
+        if plantumljar is None:
+            raise Exception("plantuml.jar not found in %s or .. of it",scriptdir)    
         gens=[
             Generator("graphviz","GraphViz","dot","-V",logo="https://graphviz.gitlab.io/_pages/Resources/app.png",url="https://www.graphviz.org/",
                       aliases=[ 'dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork', 'osage' ],
@@ -107,7 +113,7 @@ class Generators(object):
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
             Generator("mscgen","Mscgen","mscgen","",logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/",defaultType='png',outputTypes=['png', 'eps', 'svg', 'ismap']),
-            Generator("plantuml","PlantUML","java -jar ../plantuml.jar","-version",aliases=['plantuml'],
+            Generator("plantuml","PlantUML","java -jar "+plantumljar,"-version",aliases=['plantuml'],
                       logo="https://useblocks.com/assets/img/posts/plantuml_logo.png",
                       url="https://plantuml.com",
                defaultType='png',
