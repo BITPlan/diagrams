@@ -1,3 +1,4 @@
+@startuml
 salt
 {
   Just plain text
@@ -9,3 +10,4 @@ salt
   "Enter text here   "
   ^This is a droplist^
 }
+@enduml

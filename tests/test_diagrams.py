@@ -50,12 +50,13 @@ class TestDiagrams(unittest.TestCase):
                 assert not "no example for" in txt            
 
     def testGenerators(self):
-        print (Generator.getOutputDirectory())
+        if debug:
+            print ("outputDirectory is: %s" % (Generator.getOutputDirectory()))
         for gen in Generators.generators():
             gen.debug=debug
             for alias in gen.aliases:
                 txt=Example.get(alias)
-                gen.generate(txt,gen.defaultType)
+                gen.generate(alias,txt,gen.defaultType)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testDiagrams']
