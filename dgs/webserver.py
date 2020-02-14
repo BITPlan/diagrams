@@ -51,16 +51,18 @@ def render(outputType,crc32):
 @app.route('/render', methods=['POST'])
 def renderForWikiExtension():
     """ endpoint for diagrams extension"""
-    alias=request.form.get('generator')
+    generator=request.form.get('generator')
     source=request.form.get('source')
     types=request.form.get('types')
+    gen=Generators.get(generator)
+    result=gen.generate('dot',source,'png')
     json="""{ 
        "diagrams": {
           "png": {
-             "url": "http://diagrams.bitplan.com/render/png/0xb00d69ad"
+             "url": "http://diagrams.bitplan.com/render/png/%s"
           }
        }
-    }"""
+    }""" % result.crc32
     return json
     
     
