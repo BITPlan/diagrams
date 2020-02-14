@@ -150,6 +150,8 @@ class GenerateResult(object):
         url='/render/%s/%s' % (self.outputType,self.crc32)
         if self.outputType in ['gif','jpg','png','svg']:
             return "<img src='%s'>" % url;
+        elif self.outputType in ['pdf']:
+            return "<object data='%s' width='640' height='640'></object>" % url;
         else:
             return "<a href='%s'>%s %s</a>" % (url,self.outputType,self.crc32)
         

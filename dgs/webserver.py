@@ -38,17 +38,39 @@ def check(generator):
     else:
         return "%s is not a valid generator" % generator
     
-@app.route('/render/<outputType>/<crc32>')
+@app.route('/render/<outputType>/<crc32>', methods=['GET'])
 def render(outputType,crc32):
+    # allow extension ending for direct rendering e.g. in wikis
+    ext="."+outputType
+    if crc32.endswith(ext):
+        crc32=crc32[:-len(ext)]
     outputDirectory=Generator.getOutputDirectory()    
     filename="%s.%s" % (crc32,outputType)
     return send_from_directory(outputDirectory,filename)
 
+@app.route('/render', methods=['POST'])
+def renderForWikiExtension():
+    """ endpoint for diagrams extension"""
+    alias=request.form.get('generator')
+    source=request.form.get('source')
+    types=request.form.get('types')
+    json="""{ 
+       "diagrams": {
+          "png": {
+             "url": "http://diagrams.bitplan.com/render/png/0xb00d69ad"
+          }
+       }
+    }"""
+    return json
+    
+    
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests
 def form_example():
     err=None
     genResult=None
     message=""
+    source=None
+    gen=None
     if request.method == 'POST':
         try:
             source = request.form.get('source')
