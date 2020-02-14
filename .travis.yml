@@ -1,3 +1,5 @@
+# tries avoiding Error: remove_overlap: Graphviz not built with triangulation library
+dist: bionic
 # see https://docs.travis-ci.com/user/languages/python/
 language: python
 # python versions to be tested
