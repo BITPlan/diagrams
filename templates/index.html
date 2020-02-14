@@ -91,6 +91,9 @@
                         </select>
                         <button type='button' id="readexample" onclick="readExample()">example</button>
                     </div>
+                    {% for igen in gens %}
+                    {{igen.getHtmlInfo()|safe}}
+                    {% endfor %}
                 </div>
                 <div class="row">
                     <div id="outputTypeLabel" class="col-md-1 text-right">

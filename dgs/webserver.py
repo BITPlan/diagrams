@@ -1,5 +1,5 @@
 '''
-Created on 13 Feb 2020
+Created on 2020-02-13
 
 @author: wf
 '''
@@ -26,6 +26,14 @@ def index(err=None,gen='dot',source="",message=""):
 def example(generator):
     txt=Example.get(generator)
     return txt
+
+@app.route('/check/<generator>')
+def check(generator):
+    gen=Generators.get(generator)
+    if gen is not None:
+        return gen.getHtmlInfo()
+    else:
+        return "%s is not a valid generator" % generator
 
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests
 def form_example():

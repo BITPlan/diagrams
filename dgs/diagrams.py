@@ -4,6 +4,8 @@ from os.path import expanduser
 from pathlib import Path
 import os.path
 import sys
+import re
+from gremlin_python.process.graph_traversal import out
 
 class Example(object):
     """ Example handling """
@@ -62,18 +64,30 @@ class Command(object):
         return None,None
 
 class Generators(object):
+    generatorDict={}
     """ the available generators """
+    @staticmethod
+    def get(generator):
+        if len(Generators.generatorDict) is 0:
+            for gen in Generators.generators():
+                Generators.generatorDict[gen.id]=gen
+        gen=None
+        if generator in Generators.generatorDict:
+            gen=Generators.generatorDict[generator]
+        return gen        
 
     @staticmethod
     def generators():
         gens=[
-            Generator("graphviz","GraphViz","dot","-V",url="https://www.graphviz.org/",
+            Generator("graphviz","GraphViz","dot","-V",logo="https://graphviz.gitlab.io/_pages/Resources/app.png",url="https://www.graphviz.org/",
                       aliases=[ 'dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork', 'osage' ],
                       defaultType='png',
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
-            Generator("mscgen","Mscgen","mscgen","",url="http://www.mcternan.me.uk/mscgen/",defaultType='png',outputTypes=['png', 'eps', 'svg', 'ismap']),
-            Generator("plantuml","PlantUML","java -jar plantuml.jar","-version",aliases=['plantuml'],url="https://plantuml.com",
+            Generator("mscgen","Mscgen","mscgen","",logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/",defaultType='png',outputTypes=['png', 'eps', 'svg', 'ismap']),
+            Generator("plantuml","PlantUML","java -jar plantuml.jar","-version",aliases=['plantuml'],
+                      logo="https://useblocks.com/assets/img/posts/plantuml_logo.png",
+                      url="https://plantuml.com",
                defaultType='png',
                download="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download",
                outputTypes=['png','svg','eps', 'pdf', 'vdx', 'xmi', 'scxml', 'html', 'txt', 'utxt',
@@ -91,12 +105,14 @@ class Generator(object):
             os.mkdir( outputDir);
         return outputDir
 
-    def __init__(self,genid,name,cmd,versionOption,url=None,download=None,defaultType=None,aliases=None,outputTypes=None, debug=False):
+    def __init__(self,genid,name,cmd,versionOption,logo=None,url=None,download=None,defaultType=None,aliases=None,outputTypes=None, debug=False):
         """ construct me """
         self.id=genid
         self.name=name
         self.cmd=cmd
+        self.logo=logo
         self.url=url
+        self.htmlInfo=None
         self.download=download
         self.versionOption=versionOption;
         if aliases is None:
@@ -108,11 +124,27 @@ class Generator(object):
         self.outputTypes=outputTypes
         self.debug=debug
         pass
+    
+    def getHtmlInfo(self):
+        if self.htmlInfo is None:
+            version=self.getVersion()
+            self.htmlInfo="<a href='%s' title='%s:%s'><img src='%s'/></a>" % (self.url,self.name,version,self.logo)
+        return self.htmlInfo
 
     def check(self):
         """ check my version"""
         cmd=Command(self.cmd,self.versionOption,debug=self.debug)
         return cmd.check()
+    
+    def getVersion(self):    
+        stdOutText,stdErrText=self.check()
+        outputText=stdOutText+stdErrText
+        found=re.search(r'version.*[,)]',outputText)
+        if found:
+            version=found.group()
+        else:
+            version=outputText    
+        return version
     
     @staticmethod
     def getHash(txt):
