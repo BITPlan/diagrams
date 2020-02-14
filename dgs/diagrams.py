@@ -3,8 +3,10 @@ from sys import platform
 from os.path import expanduser
 from pathlib import Path
 import os.path
+import sys
 
 class Example(object):
+    """ Example handling """
     @staticmethod
     def get(generator):
         scriptdir=os.path.dirname(os.path.abspath(__file__))
@@ -60,6 +62,7 @@ class Command(object):
         return None,None
 
 class Generators(object):
+    """ the available generators """
 
     @staticmethod
     def generators():
@@ -80,10 +83,17 @@ class Generators(object):
 
 class Generator(object):
     """ a diagram generator """
+    @staticmethod
+    def getOutputDirectory():
+        home = expanduser("~")
+        outputDir=home+"/.diagrams/"
+        if not os.path.isdir(outputDir):
+            os.mkdir( outputDir);
+        return outputDir
 
-    def __init__(self,id,name,cmd,versionOption,url=None,download=None,defaultType=None,aliases=None,outputTypes=None, debug=False):
+    def __init__(self,genid,name,cmd,versionOption,url=None,download=None,defaultType=None,aliases=None,outputTypes=None, debug=False):
         """ construct me """
-        self.id=id
+        self.id=genid
         self.name=name
         self.cmd=cmd
         self.url=url
@@ -100,5 +110,25 @@ class Generator(object):
         pass
 
     def check(self):
+        """ check my version"""
         cmd=Command(self.cmd,self.versionOption,debug=self.debug)
         return cmd.check()
+    
+    @staticmethod
+    def getHash(txt):
+        hashValue=hash(txt)
+        # make it positive https://stackoverflow.com/a/18766856/1497139
+        hashValue+=sys.maxsize+1
+        hashId=hex(hashValue)
+        return hashId
+    
+    def generate(self,txt,outputType):
+        """ generate """
+        hashId=Generator.getHash(txt)
+        outputPath="%s%s.%s" % (Generator.getOutputDirectory(),hashId,outputType)
+        if self.debug:
+            print("generating %s #%s to %s" % (outputType,hashId,outputPath))
+        args="%s -T %s -o  %s" % (self.cmd,outputType,outputPath)    
+        cmd=Command(self.cmd,self.versionOption,debug=self.debug)    
+        cmd.call(args)
+        

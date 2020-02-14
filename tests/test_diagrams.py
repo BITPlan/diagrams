@@ -4,8 +4,8 @@ Created on 2020-02-13
 @author: wf
 '''
 import unittest
-from dgs.diagrams import Command,Generators,Example
-debug=False
+from dgs.diagrams import Command,Generator,Generators,Example
+debug=True
 class Test(unittest.TestCase):
 
 
@@ -22,10 +22,10 @@ class Test(unittest.TestCase):
             cmd.check()
         pass
     
-    def testGenerators(self):
+    def testGeneratorCheck(self):
         for gen in Generators.generators():
             gen.debug=True
-            gen.check()
+            gen.check()     
             
     def testExamples(self):
         for gen in Generators.generators():
@@ -35,6 +35,13 @@ class Test(unittest.TestCase):
                     print (txt)
                 assert not "no example for" in txt            
 
+    def testGenerators(self):
+        print (Generator.getOutputDirectory())
+        for gen in Generators.generators():
+            gen.debug=debug
+            for alias in gen.aliases:
+                txt=Example.get(alias)
+                gen.generate(txt,gen.defaultType)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testDiagrams']
