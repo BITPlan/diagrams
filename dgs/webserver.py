@@ -9,10 +9,9 @@ from flask import request
 from dgs.diagrams import Generators,Generator,Example
 import os
 from flask.helpers import send_from_directory
+import argparse
+import sys
 
-debug=True
-port=5003
-host='0.0.0.0'
 scriptdir=os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__,static_url_path='',static_folder=scriptdir+'/../web', template_folder=scriptdir+'/../templates')
 
@@ -90,4 +89,16 @@ def form_example():
     return index(err=err, message=message,source=source,gen=gen,genResult=genResult)
 
 if __name__ == '__main__':
-    app.run(debug=debug,port=port,host=host)   
+    parser = argparse.ArgumentParser(description="Diagrams rendering webservice")
+    parser.add_argument('--debug',
+                                 action='store_true',
+                                 help="run in debug mode")
+    parser.add_argument('--port',
+                                 type=int,
+                                 default=5003,
+                                 help="the port to use")
+    parser.add_argument('--host',
+                                 default="0.0.0.0",
+                                 help="the host to serve for")
+    args=parser.parse_args(sys.argv[1:])
+    app.run(debug=args.debug,port=args.port,host=args.host)   
