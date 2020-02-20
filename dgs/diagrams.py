@@ -5,6 +5,7 @@ from pathlib import Path
 import os.path
 import zlib
 import re
+import json
 
 
 class Example(object):
@@ -173,14 +174,21 @@ class GenerateResult(object):
     
     def asJson(self, baseurl):
         """ return my result as JSON for the Mediawiki diagrams extension"""
-        json = """{
+        errMsg=self.errMsg();
+        if errMsg:
+            jsonTxt="""{
+               "error": "generating %s failed",
+               "message": %s  
+            }""" % (self.outputType,json.dumps(errMsg))
+        else:
+            jsonTxt = """{
   "diagrams": {
     "png": {
       "url": "%s/png/%s.png"
     }
   }
 }""" % (baseurl,self.crc32)
-        return json
+        return jsonTxt
 
         
 class Generator(object):
@@ -246,9 +254,16 @@ class Generator(object):
         hashValue = zlib.crc32(txt.encode()) & 0xffffffff
         hashId = hex(hashValue)
         return hashId
+    
+    def wrap(self,txt):
+        """ wraot the given text"""
+        if self.id == "plantuml":
+            txt="@startuml\n%s\n@enduml\n" % txt
+        return txt    
 
     def generate(self, alias, txt, outputType, useCached=True):
         """ generate """
+        txt=self.wrap(txt)
         hashId = Generator.getHash(txt)
         inputPath = "%s%s.%s" % (Generator.getOutputDirectory(), hashId, 'txt')
         stdout = None

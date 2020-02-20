@@ -68,7 +68,15 @@ class TestDiagrams(unittest.TestCase):
                 if not valid:
                     print(result.errMsg())
                 assert valid
-                
+            
+    def testGenerateResult(self):
+        genid=Generators.generatorIdForAlias("plantuml")
+        gen=Generators.get(genid)
+        # provoke an error
+        result=gen.generate('unknownalias','garbage input',gen.defaultType)    
+        json=result.asJson('http://www.doe.com') 
+        assert "error" in json
+                    
     def testDecodeImage(self):
         pass            
 
