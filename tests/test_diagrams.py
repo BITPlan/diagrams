@@ -68,6 +68,9 @@ class TestDiagrams(unittest.TestCase):
                 if not valid:
                     print(result.errMsg())
                 assert valid
+                
+    def testDecodeImage(self):
+        pass            
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testDiagrams']

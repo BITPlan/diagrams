@@ -54,14 +54,9 @@ def renderForWikiExtension():
     source=request.form.get('source')
     types=request.form.get('types')
     gen=Generators.get(generator)
+    ip=request.remote_addr
     result=gen.generate('dot',source,'png')
-    json="""{ 
-       "diagrams": {
-          "png": {
-             "url": "http://diagrams.bitplan.com/render/png/%s"
-          }
-       }
-    }""" % result.crc32
+    json=result.asJson(request.base_url)
     return json
     
     
