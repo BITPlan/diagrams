@@ -47,18 +47,23 @@ def render(outputType,crc32):
     filename="%s.%s" % (crc32,outputType)
     return send_from_directory(outputDirectory,filename)
 
+def getParam(name):
+    value=request.form.get(name)
+    if value is None:
+        value=request.args.get(name)
+    return value
+
 @app.route('/render', methods=['POST'])
 def renderForWikiExtension():
     """ endpoint for diagrams extension"""
-    generator=request.form.get('generator')
-    source=request.form.get('source')
-    types=request.form.get('types')
+    generator=getParam('generator')
+    source=getParam('source')
+    format=getParam('types')
     gen=Generators.get(generator)
     ip=request.remote_addr
-    result=gen.generate('dot',source,'png')
+    result=gen.generate('dot',source,format)
     json=result.asJson(request.base_url)
     return json
-    
     
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests
 def form_example():

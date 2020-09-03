@@ -4,6 +4,7 @@ Created on 2020-02-13
 @author: wf
 '''
 import unittest
+import os
 from dgs.diagrams import Command,Generator,Generators,Example
 debug=True
 class TestDiagrams(unittest.TestCase):
@@ -70,11 +71,20 @@ class TestDiagrams(unittest.TestCase):
                 assert valid
             
     def testGenerateResult(self):
+        '''
+        test provoked error
+        '''
         genid=Generators.generatorIdForAlias("plantuml")
         gen=Generators.get(genid)
         # provoke an error
         result=gen.generate('unknownalias','garbage input',gen.defaultType)    
         json=result.asJson('http://www.doe.com') 
+        print (json)
+        # there is an image version of the error
+        assert os.path.isfile(result.path)
+        # which needs to be remove to make the test reproducible
+        os.remove(result.path)
+        
         assert "error" in json
                     
     def testDecodeImage(self):

@@ -183,11 +183,11 @@ class GenerateResult(object):
         else:
             jsonTxt = """{
   "diagrams": {
-    "png": {
-      "url": "%s/png/%s.png"
+    "%s": {
+      "url": "%s/%s/%s.%s"
     }
   }
-}""" % (baseurl,self.crc32)
+}""" % (self.outputType,baseurl,self.outputType,self.crc32,self.outputType)
         return jsonTxt
 
         
