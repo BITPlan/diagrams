@@ -65,7 +65,8 @@ def renderForWikiExtension():
     # use for DOS attack prevention
     ip=request.remote_addr
     result=gen.generate('dot',source,targetFormat)
-    json=result.asJson(request.base_url)
+    # force SSL
+    json=result.asJson(request.base_url.replace('http:','https:'))
     return json
     
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests

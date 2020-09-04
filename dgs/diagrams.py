@@ -141,7 +141,15 @@ class Generators(object):
 class GenerateResult(object):
 
     def __init__(self, crc32, outputType, path, stdout, stderr):
-        """ construct me """
+        ''' 
+        construct me
+        Args:
+            crc32(string): the hash code to use
+            outputType(string): e.g. "png", "svg"
+            path(string): the path to the output file
+            stdout(string): the STDOUT result of the generate command
+            stderr(string): the STDERR result of the generate command
+        '''
         self.crc32 = crc32;
         self.outputType = outputType;
         self.path = path;
@@ -149,7 +157,12 @@ class GenerateResult(object):
         self.stderr = stderr
        
     def errMsg(self):
-        """ decode my stdout and stderr to an error message"""
+        '''
+         decode my stdout and stderr to an error message
+         
+         Returns:
+             string: a message containing stdout concatenated with stderr in utf-8 format
+        '''
         msg = ""
         if self.stdout is not None:
             msg = msg + self.stdout.decode('utf-8')
