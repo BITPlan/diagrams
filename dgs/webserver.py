@@ -58,10 +58,13 @@ def renderForWikiExtension():
     """ endpoint for diagrams extension"""
     generator=getParam('generator')
     source=getParam('source')
-    format=getParam('types')
+    targetFormat=getParam('types')
+    if targetFormat is None or targetFormat=="None":
+        targetFormat="png"
     gen=Generators.get(generator)
+    # use for DOS attack prevention
     ip=request.remote_addr
-    result=gen.generate('dot',source,format)
+    result=gen.generate('dot',source,targetFormat)
     json=result.asJson(request.base_url)
     return json
     

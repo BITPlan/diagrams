@@ -127,7 +127,7 @@ class Generators(object):
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
             Generator("mscgen", "Mscgen", "mscgen", "", logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/", defaultType='png', outputTypes=['png', 'eps', 'svg', 'ismap']),
-            Generator("plantuml", "PlantUML", "java -jar " + plantumljar, "-version", aliases=['plantuml'],
+            Generator("plantuml", "PlantUML", "java -Djava.awt.headless=true -jar " + plantumljar, "-version", aliases=['plantuml'],
                       logo="https://useblocks.com/assets/img/posts/plantuml_logo.png",
                       url="https://plantuml.com",
                defaultType='png',
@@ -237,6 +237,9 @@ class Generator(object):
         return self.gencmd.check()
 
     def getVersion(self):
+        '''
+        get the version 
+        '''
         stdOutText, stdErrText = self.check()
         outputText = stdOutText + stdErrText
         found = re.search(r'version.*[,)]', outputText)
@@ -251,6 +254,13 @@ class Generator(object):
 
     @staticmethod
     def getHash(txt):
+        '''
+        get a hash value for the given text
+        Args:
+            txt
+        Returns:
+            the hash value 
+        '''
         hashValue = zlib.crc32(txt.encode()) & 0xffffffff
         hashId = hex(hashValue)
         return hashId
@@ -262,7 +272,13 @@ class Generator(object):
         return txt    
 
     def generate(self, alias, txt, outputType, useCached=True):
-        """ generate """
+        ''' 
+        generate
+        
+        txt(string): the text to generate from e.g. graphviz/plantuml code
+        outputType(string): e.g. "png", "svg"
+        useCached(boolean): True - if a cached result should be returned if it is available
+        '''
         txt=self.wrap(txt)
         hashId = Generator.getHash(txt)
         inputPath = "%s%s.%s" % (Generator.getOutputDirectory(), hashId, 'txt')

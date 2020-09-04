@@ -21,7 +21,7 @@ before_install:
   - sudo apt-get -y install openjdk-8-jdk
 # command to install dependencies
 install:
-  - ./install
+  - scripts/install
 # command to run tests
 script:
   - python3 -m unittest discover
