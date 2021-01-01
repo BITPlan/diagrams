@@ -60,6 +60,9 @@ class Command(object):
             return None, None
 
     def check(self):
+        '''
+        check 
+        '''
         cmdpaths = []
         # do we know the cmdpath?
         if self.cmdpath is None:
@@ -254,7 +257,10 @@ class Generator(object):
         get the version 
         '''
         stdOutText, stdErrText = self.check()
-        outputText = stdOutText + stdErrText
+        if stdOutText is not None and stdErrText is not None:
+            outputText = stdOutText + stdErrText
+        else:
+            outputText="Couldn't get version for %s - you  might want to check the installation" % self.cmd
         found = re.search(r'version.*[,)]', outputText)
         if found:
             version = found.group()
