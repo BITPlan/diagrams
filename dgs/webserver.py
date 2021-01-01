@@ -11,6 +11,7 @@ import os
 from flask.helpers import send_from_directory
 import argparse
 import sys
+from pydevd_file_utils import setup_client_server_paths
 
 scriptdir=os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__,static_url_path='',static_folder=scriptdir+'/../web', template_folder=scriptdir+'/../templates')
@@ -104,5 +105,27 @@ if __name__ == '__main__':
     parser.add_argument('--host',
                                  default="0.0.0.0",
                                  help="the host to serve for")
+    parser.add_argument('--debugServer',
+                                 help="remote debug Server")
+    parser.add_argument('--debugPort',type=int,
+                                 help="remote debug Port",default=5678)
+    parser.add_argument('--debugPathMapping',nargs='+',help="remote debug Server path mapping - needs two arguments 1st: remotePath 2nd: local Path")
+
     args=parser.parse_args(sys.argv[1:])
+    if args.debugServer:
+        import pydevd
+        print (args.debugPathMapping,flush=True)
+        if args.debugPathMapping:
+            if len(args.debugPathMapping)==2:
+                remotePath=args.debugPathMapping[0] # path on the remote debugger side
+                localPath=args.debugPathMapping[1]  # path on the local machine where the code runs
+                MY_PATHS_FROM_ECLIPSE_TO_PYTHON = [
+                    (remotePath, localPath),
+                ]
+                setup_client_server_paths(MY_PATHS_FROM_ECLIPSE_TO_PYTHON)
+                #os.environ["PATHS_FROM_ECLIPSE_TO_PYTHON"]='[["%s", "%s"]]' % (remotePath,localPath)
+                #print("trying to debug with PATHS_FROM_ECLIPSE_TO_PYTHON=%s" % os.environ["PATHS_FROM_ECLIPSE_TO_PYTHON"]);
+     
+        pydevd.settrace(args.debugServer, port=args.debugPort,stdoutToServer=True, stderrToServer=True)
+
     app.run(debug=args.debug,port=args.port,host=args.host)   
