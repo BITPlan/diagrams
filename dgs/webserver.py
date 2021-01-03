@@ -20,7 +20,7 @@ app = Flask(__name__,static_url_path='',static_folder=scriptdir+'/../web', templ
 def home():
     return index()
     
-def index(err=None,gen,alias='dot',outputType='png',source="",message="",genResult=None):    
+def index(err=None,gen=None,alias='dot',outputType='png',source="",message="",genResult=None):    
     """ render index page with the given parameters"""
     return render_template('index.html',outputType=outputType,gen=gen,alias=alias,gens=Generators.generators(),err=err, message=message, source=source,genResult=genResult)
 
