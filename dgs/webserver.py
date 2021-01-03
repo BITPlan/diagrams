@@ -91,7 +91,7 @@ def form_example():
                 raise Exception("could not generate %s for %s",outputType,generatorId)
         except Exception as ex:
             err=ex
-    return index(err=err, message=message,outputType=outputType,source=source,gen=alias,outputType=outputType,genResult=genResult)
+    return index(err=err, message=message,source=source,gen=alias,outputType=outputType,genResult=genResult)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Diagrams rendering webservice")
