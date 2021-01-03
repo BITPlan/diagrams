@@ -74,6 +74,7 @@ def renderForWikiExtension():
 def form_example():
     err=None
     alias="graphviz"
+    outputType='png';
     genResult=None
     message=""
     source=None
