@@ -20,9 +20,9 @@ app = Flask(__name__,static_url_path='',static_folder=scriptdir+'/../web', templ
 def home():
     return index()
     
-def index(err=None,gen='dot',source="",message="",genResult=None):    
+def index(err=None,gen='dot',outputType='png',source="",message="",genResult=None):    
     """ render index page with the given parameters"""
-    return render_template('index.html',gen=gen,gens=Generators.generators(),err=err, message=message, source=source,genResult=genResult)
+    return render_template('index.html',gen=gen,outputType=outputType,gens=Generators.generators(),err=err, message=message, source=source,genResult=genResult)
 
 @app.route('/example/<generator>')
 def example(generator):
@@ -91,7 +91,7 @@ def form_example():
                 raise Exception("could not generate %s for %s",outputType,generatorId)
         except Exception as ex:
             err=ex
-    return index(err=err, message=message,source=source,gen=gen,genResult=genResult)
+    return index(err=err, message=message,source=source,gen=alias,outputType=outputType,genResult=genResult)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Diagrams rendering webservice")
