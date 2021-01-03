@@ -82,7 +82,7 @@ def form_example():
             source = request.form.get('source')
             alias=request.form.get('generator')
             generatorId=Generators.generatorIdForAlias(alias)
-            outputType=request.form.get(generatorId+'-output')
+            outputType=request.form.get('outputType')
             gen=Generators.get(generatorId)
             if gen is None:
                 raise Exception("invalid generator %s",generatorId)

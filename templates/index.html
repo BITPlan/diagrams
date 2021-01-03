@@ -13,36 +13,7 @@
         <link href="css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/diagrams.css">
         <script>
-            function setDisplay(id,display) {
-              var el=document.getElementById(id);
-              if (el) el.style.display=display;
-            }
-            function initOutputTypesDisplay(currentGenerator) {
-              {% set ns=namespace(delimc = '') %}
-              var generators=[ 
-              {% for igen in gens %}
-              {{ns.delimc}}'{{igen.id}}'{% set ns.delimc = ',' %}
-              {% endfor %}
-              ];
-              generators.forEach(generator => {
-                 var display="none";
-                 if (generator===currentGenerator) display="block";
-                 setDisplay(generator+"-outputTypes",display);
-              });
-            }
-            function onGeneratorChange(selector) {
-              var value=selector.value;
-              var generator='plantuml';
-              switch (value) {
-                  {% for igen in gens %}
-                    {% for alias in igen.aliases %}
-                  case '{{alias}}':
-                     initOutputTypesDisplay('{{igen.id}}')
-                  break;
-                    {% endfor %}
-                  {% endfor %}
-              }
-            }
+            // read the example
             function readExample() {
             	var selector = document.getElementById("generatorselect");
             	var example = selector.options[selector.selectedIndex].value.trim();
@@ -101,13 +72,11 @@
                         <label class="label">Output:</label>
                     </div>
                     <div id="outputTypeCol" class="col-md-6">
-                        {% for igen in gens %}
-                          <fieldset id='{{igen.id}}-outputTypes'>
-                          {% for genOutputType in igen.outputTypes %}
-                            <input type="radio" id="{{igen.id}}-output-{{outputType}}" name="{{igen.id}}-output" value="{{genOutputType}}" {% if genOutputType ==outputType  %} checked {% endif %}>&nbsp;{{genOutputType}}
+                        <fieldset id='outputTypes'>
+                          {% for genOutputType in ['png','svg','txt'] %}
+                            <input type="radio" id="output-{{genOutputType}}" name="outputType" value="{{genOutputType}}" {% if genOutputType ==outputType  %} checked {% endif %}>&nbsp;{{genOutputType}}
                           {% endfor %}
-                          </fieldset>
-                        {% endfor %}
+                         </fieldset>
                     </div>
                 </div>
                 <div class="row">
@@ -133,9 +102,5 @@
             <!--  end of main content box -->
             <div id="footerbox"></div>
         </div>
-        <script>
-        /* onload */
-        initOutputTypesDisplay({{gen.id}});
-        </script>
     </body>
 </html>
