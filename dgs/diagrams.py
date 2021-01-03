@@ -7,7 +7,6 @@ import zlib
 import re
 import json
 
-
 class Example(object):
     """ Example handling """
 
@@ -126,14 +125,12 @@ class Generators(object):
         gens = [
             Generator("graphviz", "GraphViz", "dot", "-V", logo="https://graphviz.org/Resources/app.png", url="https://www.graphviz.org/",
                       aliases=[ 'dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork', 'osage' ],
-                      defaultType='png',
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
-            Generator("mscgen", "Mscgen", "mscgen", "", logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/", defaultType='png', outputTypes=['png', 'eps', 'svg', 'ismap']),
+            Generator("mscgen", "Mscgen", "mscgen", "", logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/",  outputTypes=['png', 'eps', 'svg', 'ismap']),
             Generator("plantuml", "PlantUML", "java -Djava.awt.headless=true -jar " + plantumljar, "-version", aliases=['plantuml'],
                       logo="https://useblocks.com/assets/img/posts/plantuml_logo.png",
                       url="https://plantuml.com",
-               defaultType='png',
                download="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download",
                outputTypes=['png', 'svg', 'eps', 'pdf', 'vdx', 'xmi', 'scxml', 'html', 'txt', 'utxt',
 			'latex', 'latex:nopreamble'])
@@ -206,7 +203,6 @@ class GenerateResult(object):
 }""" % (self.outputType,baseurl,self.outputType,self.crc32,self.outputType)
         return jsonTxt
 
-        
 class Generator(object):
     """ a diagram generator """
 
@@ -218,7 +214,7 @@ class Generator(object):
             os.mkdir(outputDir);
         return outputDir
 
-    def __init__(self, genid, name, cmd, versionOption, logo=None, url=None, download=None, defaultType=None, aliases=None, outputTypes=None, debug=False):
+    def __init__(self, genid, name, cmd, versionOption, logo=None, url=None, download=None,  aliases=None, outputTypes=None, debug=False):
         """ construct me """
         self.id = genid
         self.name = name
@@ -233,8 +229,6 @@ class Generator(object):
             self.aliases = [cmd]
         else:
             self.aliases = aliases
-        self.defaultType = defaultType
-        self.selectedType = defaultType
         self.outputTypes = outputTypes
         self.debug = debug
         pass

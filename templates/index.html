@@ -103,8 +103,8 @@
                     <div id="outputTypeCol" class="col-md-6">
                         {% for igen in gens %}
                           <fieldset id='{{igen.id}}-outputTypes'>
-                          {% for outputType in igen.outputTypes %}
-                            <input type="radio" id="{{igen.id}}-output-{{outputType}}" name="{{igen.id}}-output" value="{{outputType}}" {% if igen.selectedType ==outputType  %} checked {% endif %}>&nbsp;{{outputType}}
+                          {% for genOutputType in igen.outputTypes %}
+                            <input type="radio" id="{{igen.id}}-output-{{outputType}}" name="{{igen.id}}-output" value="{{genOutputType}}" {% if genOutputType ==outputType  %} checked {% endif %}>&nbsp;{{genOutputType}}
                           {% endfor %}
                           </fieldset>
                         {% endfor %}
