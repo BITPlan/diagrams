@@ -73,6 +73,7 @@ def renderForWikiExtension():
 @app.route('/diagrams', methods=['GET', 'POST']) #allow both GET and POST requests
 def form_example():
     err=None
+    alias="graphviz"
     genResult=None
     message=""
     source=None
