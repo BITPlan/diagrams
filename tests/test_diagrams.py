@@ -64,7 +64,7 @@ class TestDiagrams(unittest.TestCase):
             gen.debug=debug
             for alias in gen.aliases:
                 txt=Example.get(alias)
-                result=gen.generate(alias,txt,gen.defaultType)
+                result=gen.generate(alias,txt,"png")
                 valid =result.isValid()
                 if not valid:
                     print(result.errMsg())
@@ -77,7 +77,7 @@ class TestDiagrams(unittest.TestCase):
         genid=Generators.generatorIdForAlias("plantuml")
         gen=Generators.get(genid)
         # provoke an error
-        result=gen.generate('unknownalias','garbage input',gen.defaultType)    
+        result=gen.generate('unknownalias','garbage input',"png")    
         json=result.asJson('http://www.doe.com') 
         print (json)
         # there is an image version of the error
