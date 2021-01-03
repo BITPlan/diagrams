@@ -82,8 +82,8 @@
                         <select name="generator" id="generatorselect" onchange="onGeneratorChange(this)">
                             {% for igen in gens %}
                             <optgroup id="{{igen.id}}-optgroup" label="{{igen.name}}">
-                                {% for alias in igen.aliases %}
-                                <option value="{{alias}}" name="{{alias}}" {% if gen ==alias  %} selected {% endif %}>{{alias}}</option>
+                                {% for genAlias in igen.aliases %}
+                                <option value="{{genAlias}}" name="{{genAlias}}" {% if genAlias ==alias  %} selected {% endif %}>{{genAlias}}</option>
                                 {% endfor %}
                             </optgroup>
                             {% endfor %}
