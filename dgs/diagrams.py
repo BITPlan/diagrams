@@ -124,7 +124,7 @@ class Generators(object):
         if plantumljar is None:
             raise Exception("plantuml.jar not found in %s or .. of it", scriptdir)    
         gens = [
-            Generator("graphviz", "GraphViz", "dot", "-V", logo="https://graphviz.gitlab.io/_pages/Resources/app.png", url="https://www.graphviz.org/",
+            Generator("graphviz", "GraphViz", "dot", "-V", logo="https://graphviz.org/Resources/app.png", url="https://www.graphviz.org/",
                       aliases=[ 'dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork', 'osage' ],
                       defaultType='png',
                       outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
