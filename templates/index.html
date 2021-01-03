@@ -79,7 +79,6 @@
                         <label class="label" for="generator">Generator:</label>
                     </div>
                     <div id="generatorcol" class="col-md-6">
-                    	<button type='submit' id="render">render</button>
                         <select name="generator" id="generatorselect" onchange="onGeneratorChange(this)">
                             {% for igen in gens %}
                             <optgroup id="{{igen.id}}-optgroup" label="{{igen.name}}">
@@ -89,6 +88,8 @@
                             </optgroup>
                             {% endfor %}
                         </select>
+                    	<button type='submit' id="render">render</button>
+                    	<br>
                         <button type='button' id="readexample" onclick="readExample()">example</button>
                     </div>
                     {% for igen in gens %}
