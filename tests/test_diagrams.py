@@ -79,12 +79,14 @@ class TestDiagrams(unittest.TestCase):
         # provoke an error
         result=gen.generate('unknownalias','garbage input',"png")    
         json=result.asJson('http://www.doe.com') 
-        print (json)
+        debug=self.debug
+        debug=True
+        if debug:
+            print(f"json:{json}")
         # there is an image version of the error
         assert os.path.isfile(result.path)
         # which needs to be remove to make the test reproducible
         os.remove(result.path)
-        
         assert "error" in json
                     
     def testDecodeImage(self):
