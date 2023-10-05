@@ -56,6 +56,7 @@ class Command(object):
             return stdout, stderr
         except Exception:
             process.kill()
+            process.wait()  # Ensure the process has terminated
             return None, None
 
     def check(self):
