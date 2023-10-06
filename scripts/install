@@ -24,4 +24,4 @@ then
   echo "downloading plantuml"
   curl -L http://sourceforge.net/projects/plantuml/files/plantuml.jar/download -o plantuml.jar
 fi
-pip3 install -r dgs/requirements.txt
+pip install . 

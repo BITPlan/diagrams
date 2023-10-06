@@ -1,4 +1,0 @@
-# 2020-02-13
-Flask
-#https://pypi.org/project/pydevd/
-pydevd

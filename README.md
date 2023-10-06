@@ -1,5 +1,5 @@
 # diagrams
-Diagrams-Service
+Online diagrams-Service supporting graphviz and plantuml markup
 
 [![Join the chat at https://gitter.im/diagrams-service/community](https://badges.gitter.im/diagrams-service/community.svg)](https://gitter.im/diagrams-service/community)
 [![Travis (.org)](https://img.shields.io/travis/BITPlan/diagrams.svg)](https://travis-ci.org/BITPlan/diagrams)
