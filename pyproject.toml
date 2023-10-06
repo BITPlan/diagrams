@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "diagrams"
+name = "online-diagrams"
 authors = [
   {name = "Wolfgang Fahl", email = "wf@bitplan.com"}
 ]
