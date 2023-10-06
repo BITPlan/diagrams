@@ -94,12 +94,16 @@ class Command(object):
 
 
 class Generators(object):
+    """
+    wrapper for available generators
+    """
+    
     generatorDict = {}
     """ the available generators """
 
     @staticmethod
     def get(generator):
-        if len(Generators.generatorDict) is 0:
+        if len(Generators.generatorDict)==0:
             for gen in Generators.generators():
                 Generators.generatorDict[gen.id] = gen
         gen = None
