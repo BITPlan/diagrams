@@ -58,6 +58,9 @@ class TestDiagrams(unittest.TestCase):
                 assert not "no example for" in txt            
 
     def testGenerators(self):
+        """
+        test all generators
+        """
         if debug:
             print ("outputDirectory is: %s" % (Generator.getOutputDirectory()))
         for gen in Generators.generators():

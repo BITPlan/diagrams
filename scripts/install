@@ -1,8 +1,16 @@
 #!/bin/bash
 # WF 2020-02-13
+
+#
+# automatic installation of commands based on a given package uname
+#
+#  params
+#   #1: cmd: the command to check e.g. dot
+#   #2: package: the package to install e.g. graphviz
+#
 autoinstall() {
   local l_cmd="$1"
-  local l_package="$1"
+  local l_package="$2"
   which $l_cmd>/dev/null
   if [ $? -ne 0 ]
   then
@@ -24,4 +32,4 @@ then
   echo "downloading plantuml"
   curl -L http://sourceforge.net/projects/plantuml/files/plantuml.jar/download -o plantuml.jar
 fi
-pip install . 
+pip install .
