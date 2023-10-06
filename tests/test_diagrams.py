@@ -6,16 +6,15 @@ Created on 2020-02-13
 import unittest
 import os
 from dgs.diagrams import Command,Generator,Generators,Example
-debug=True
-class TestDiagrams(unittest.TestCase):
-    """ Test the diagrams service"""
-    def setUp(self):
-        pass
+from tests.basetest import Basetest
 
-    def tearDown(self):
-        pass
+class TestDiagrams(Basetest):
+    """ Test the online diagrams service"""
 
     def testCommands(self):
+        """
+        test some commands
+        """
         cmds=[Command("pwd","",debug=True),Command("java","-version",debug=True),Command("dot","-V",debug=True),Command("mscgen","",debug=True)]
         for cmd in cmds:
             cmd.check()
@@ -27,24 +26,24 @@ class TestDiagrams(unittest.TestCase):
             gen=Generators.get(generator)
             assert gen is not None
             info=gen.getHtmlInfo()
-            if debug:
+            if self.debug:
                 print(info)
     
     def testGeneratorCheck(self):
         for gen in Generators.generators():
-            gen.debug=debug
+            gen.debug=self.debug
             gen.check()
             
     def testGeneratorVersion(self):
         for gen in Generators.generators():
-            gen.debug=debug
+            gen.debug=self.debug
             version=gen.getVersion()    
-            if debug:
+            if self.debug:
                 print(version)    
                 
     def testGeneratorForAlias(self):
         for gen in Generators.generators():
-            gen.debug=debug
+            gen.debug=self.debug
             for alias in gen.aliases:
                 genid=Generators.generatorIdForAlias(alias)
                 assert genid==gen.id
@@ -53,7 +52,7 @@ class TestDiagrams(unittest.TestCase):
         for gen in Generators.generators():
             for alias in gen.aliases:
                 txt=Example.get(alias)
-                if debug:
+                if self.debug:
                     print (txt)
                 assert not "no example for" in txt            
 
@@ -61,10 +60,10 @@ class TestDiagrams(unittest.TestCase):
         """
         test all generators
         """
-        if debug:
+        if self.debug:
             print ("outputDirectory is: %s" % (Generator.getOutputDirectory()))
         for gen in Generators.generators():
-            gen.debug=debug
+            gen.debug=self.debug
             for alias in gen.aliases:
                 txt=Example.get(alias)
                 result=gen.generate(alias,txt,"png")
@@ -83,7 +82,7 @@ class TestDiagrams(unittest.TestCase):
         result=gen.generate('unknownalias','garbage input',"png")    
         json=result.asJson('http://www.doe.com') 
         debug=self.debug
-        debug=True
+        #debug=True
         if debug:
             print(f"json:{json}")
         # there is an image version of the error
@@ -91,10 +90,3 @@ class TestDiagrams(unittest.TestCase):
         # which needs to be remove to make the test reproducible
         os.remove(result.path)
         assert "error" in json
-                    
-    def testDecodeImage(self):
-        pass            
-
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testDiagrams']
-    unittest.main()

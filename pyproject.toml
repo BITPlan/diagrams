@@ -52,5 +52,9 @@ only-include = ["dgs"]
 
 [tool.hatch.build.targets.wheel.sources]
 "dgs" = "dgs"
+"diagrams_examples" = "diagrams_examples"
+
+[project.scripts]
+diagrams= "dgs.diagrams_cmd:main"
 
 
