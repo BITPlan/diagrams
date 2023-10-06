@@ -13,5 +13,9 @@ Online diagrams-Service supporting graphviz and plantuml markup
 ### Documentation
 * [BITPlan Wiki](http://wiki.bitplan.com/index.php/Diagrams)
 
+### Demo
+* [demo](http://diagrams.bitplan.com)
+
+
 ### Authors
 * [Wolfgang Fahl](http://www.bitplan.com/Wolfgang_Fahl)
