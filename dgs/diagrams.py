@@ -20,7 +20,6 @@ class Example(object):
             txt = "no example for %s found" % generator
         return txt
 
-
 class Command(object):
     """ a command to be run using the shell environment """
 

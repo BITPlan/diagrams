@@ -29,7 +29,7 @@ class DiagramsCmd(WebserverCmd):
         parser.add_argument("-rp", "--root_path",default=WebServer.examples_path(),help="path to pdf files [default: %(default)s]")
         return parser
     
-    def cmd_main(self,argv:list=None):
+    def cmd_main(self,argv:None):
         """
         command line main
         """

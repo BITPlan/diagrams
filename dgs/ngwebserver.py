@@ -10,6 +10,8 @@ from ngwidgets.progress import NiceguiProgressbar
 from ngwidgets.webserver import WebserverConfig
 from ngwidgets.background import BackgroundTaskHandler
 import os
+from dgs.diagrams import Generators,Generator,Example
+from fastapi.responses import PlainTextResponse
 
 class WebServer(InputWebserver):
     """
@@ -39,6 +41,10 @@ class WebServer(InputWebserver):
         async def settings():
             return await self.settings()
         
+        @ui.page('/example/{generator:str}')
+        def example(generator:str):
+            return self.example(generator)
+        
     @classmethod
     def examples_path(cls)->str:
         # the root directory (default: examples)
@@ -46,3 +52,7 @@ class WebServer(InputWebserver):
         path = os.path.abspath(path)
         return path
     
+    def example(self,generator:str):
+        """ get the example source code for the given generator """
+        txt=Example.get(generator)
+        return PlainTextResponse(txt)

@@ -3,7 +3,6 @@ Created on 2020-02-13
 
 @author: wf
 '''
-import unittest
 import os
 from dgs.diagrams import Command,Generator,Generators,Example
 from tests.basetest import Basetest
