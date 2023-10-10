@@ -15,7 +15,7 @@ license= "Apache-2.0"
 dependencies = [
 	"flask",
     # nicegui widgets
-    "ngwidgets>=0.1.0",
+    "ngwidgets>=0.1.2",
 ]
 
 requires-python = ">=3.8"
