@@ -7,13 +7,43 @@ import zlib
 import re
 import json
 
+class ConfigurationError(Exception):
+    """Exception raised for errors in the configuration.
+
+    Attributes:
+        message -- explanation of the error
+    """
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(message)
+
 class Example(object):
     """ Example handling """
-
-    @staticmethod
-    def get(generator):
+    
+    @classmethod
+    def get_base_path(cls)->str:
+        """
+        get the Example base path
+        """
         scriptdir = os.path.dirname(os.path.abspath(__file__))
-        example = scriptdir + "/../web/examples/example.%s" % generator
+        # for compatibility reasons try two paths
+        for path in ["../web/examples","../diagrams_examples"]:
+            base_path=f"{scriptdir}/{path}"
+            if os.path.isdir(base_path):
+                return base_path
+        raise ConfigurationError("examples not found in ../web or ../diagrams_examples")
+
+    @classmethod
+    def get(cls,generator:str)->str:
+        """
+        get the example source code for the given generator
+        
+        Returns:
+            str: the source code for the given generator
+        """
+        base_path=cls.get_base_path()
+        example = f"{base_path}/example.{generator}"
         if os.path.isfile(example):
             txt = Path(example).read_text()
         else:

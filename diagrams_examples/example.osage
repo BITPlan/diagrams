@@ -1,0 +1,19 @@
+digraph test123 {
+        pack=8
+        subgraph cluster0 {
+          packmode=array
+          x y x0 y0 x1
+          subgraph cluster1 {
+            m n
+          }
+        }
+        b [shape=box];
+        c [label="hello\0orld",color=blue,fontsize=24,
+             fontname="Palatino-Italic",fontcolor=red,style=filled];
+        a -> z
+        x -> z
+        a -> b -> c;
+        a -> {x y};
+        edge [style=dashed,color=red];
+        b -> x;
+}
