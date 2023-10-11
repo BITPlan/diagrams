@@ -68,7 +68,7 @@ class WebServer(InputWebserver):
         gen=Generators.get(generator)
         if gen is not None:
             html=gen.getHtmlInfo()
-            return PlainTextResponse(html)
+            return HTMLResponse(html)
         else:
             msg=f"{generator} is not a valid generator"
             return PlainTextResponse(msg, 404)
