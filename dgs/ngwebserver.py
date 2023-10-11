@@ -11,7 +11,7 @@ from ngwidgets.webserver import WebserverConfig
 from ngwidgets.background import BackgroundTaskHandler
 import os
 from dgs.diagrams import Generators,Generator,Example
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, HTMLResponse
 
 class WebServer(InputWebserver):
     """
@@ -45,6 +45,10 @@ class WebServer(InputWebserver):
         def example(generator:str):
             return self.example(generator)
         
+        @ui.page('/check/{generator:str}')
+        def check(generator:str):
+            return self.check(generator)
+        
     @classmethod
     def examples_path(cls)->str:
         # the root directory (default: examples)
@@ -56,3 +60,15 @@ class WebServer(InputWebserver):
         """ get the example source code for the given generator """
         txt=Example.get(generator)
         return PlainTextResponse(txt)
+    
+    def check(self,generator:str):
+        """
+        get the html explanation for the given generator
+        """
+        gen=Generators.get(generator)
+        if gen is not None:
+            html=gen.getHtmlInfo()
+            return PlainTextResponse(html)
+        else:
+            msg=f"{generator} is not a valid generator"
+            return PlainTextResponse(msg, 404)

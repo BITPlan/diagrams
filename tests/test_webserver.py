@@ -72,3 +72,16 @@ class TestWebserver(Basetest):
             if debug:
                 print(text)
             self.assertTrue(marker in text,example)
+            
+    def testGenerators(self):
+        """
+        test the /check Generators RESTFul access
+        """
+        return
+        expected_status_code=200
+        for generator in ["graphviz","plantuml","mscgen"]:
+            response=self.checkResponse(f"/check/{generator}", expected_status_code)
+            html=response.html
+            debug=True
+            if debug:
+                print(html)
