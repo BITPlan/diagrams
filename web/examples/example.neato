@@ -1,3 +1,4 @@
+// neato example
 graph G {
   run -- intr;
   intr -- runbl;

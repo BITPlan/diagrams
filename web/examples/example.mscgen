@@ -1,3 +1,4 @@
+// mscgen example
 # MSC for some fictional process
 msc {
   hscale = "2";

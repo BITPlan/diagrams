@@ -1,3 +1,4 @@
+// patchwork example
 graph G {
   node[style=filled]
   subgraph cluster0 {

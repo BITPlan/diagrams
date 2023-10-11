@@ -67,6 +67,8 @@ class TestWebserver(Basetest):
         for example in ["circo","dot","fdp","mscgen","neato","osage","patchwork","plantuml","sfdp","twopi"]:
             response=self.checkResponse(f"/example/{example}", expected_status_code)
             text=response.text
-            debug=True
+            marker=f"{example} example"
+            debug=self.debug
             if debug:
                 print(text)
+            self.assertTrue(marker in text,example)

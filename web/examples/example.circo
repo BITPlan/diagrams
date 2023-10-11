@@ -1,3 +1,4 @@
+// circo example
 digraph g1 {
     layout="circo";
     node [shape = doublecircle]; N4 N6;
