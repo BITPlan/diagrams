@@ -13,6 +13,7 @@ import os
 from typing import Any
 from dgs.diagrams import Generators,Generator,Example
 from fastapi.responses import PlainTextResponse, HTMLResponse,FileResponse
+from aiohttp.web_routedef import options
 
 class WebServer(InputWebserver):
     """
@@ -114,7 +115,7 @@ class WebServer(InputWebserver):
         
         return response
     
-    def on_render(self,e):
+    def on_render(self,_e):
         """
         action when render button has been clicked
         """
@@ -130,7 +131,7 @@ class WebServer(InputWebserver):
         self.gen_result.content=html
         pass
         
-    def on_example(self,e):
+    def on_example(self,_e):
         """
         action when example button has been clicked
         """
@@ -139,6 +140,18 @@ class WebServer(InputWebserver):
             self.source_area.value=example_txt
         except Exception as ex:
             self.handle_exception(ex)
+            
+    def modify_select(self,select,options):
+        """
+        modify the given selection
+        """
+        select.value=None
+        select.options=options
+        select.update()
+        first=list(options.keys())[0]
+        select.value=first
+        select.update()
+        pass
     
     def selectGenerator(self,generator_id:str):
         """
@@ -154,14 +167,11 @@ class WebServer(InputWebserver):
             self.markup_dict={}
             for alias in self.generator.aliases:
                 self.markup_dict[alias]=alias
-            self.markup_select.options=self.markup_dict
-            self.markup_select.value=self.generator.aliases[0]
-            self.markup_select.update()
+            self.modify_select(self.markup_select,self.markup_dict)         
             self.output_type_dict={}
             for output_type in self.generator.outputTypes:
                 self.output_type_dict[output_type]=output_type
-            self.output_type_select.options=self.output_type_dict
-            self.output_type_select.value=self.generator.outputTypes[0]
+            self.modify_select(self.output_type_select,self.output_type_dict)
         except Exception as ex:
             self.handle_exception(ex)
     
