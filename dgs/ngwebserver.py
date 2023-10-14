@@ -34,6 +34,7 @@ class WebServer(InputWebserver):
         app.on_shutdown(self.bth.cleanup())
         self.future=None
         self.generators=Generators.generators()
+        self.generator_id="graphviz"
         self.markup_dict={}
         
         @app.get('/example/{generator:str}')
@@ -141,6 +142,6 @@ class WebServer(InputWebserver):
             self.generator_select.change_handler=self.onGeneratorSelect
             self.markup_select=self.add_select("Markup:",self.markup_dict)
             self.gen_info=ui.html()
-            self.selectGenerator("graphviz")
+            self.generator_select.value=self.generator_id
         await self.setup_footer()
 
