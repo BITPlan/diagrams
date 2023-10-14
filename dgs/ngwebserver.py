@@ -10,8 +10,9 @@ from ngwidgets.progress import NiceguiProgressbar
 from ngwidgets.webserver import WebserverConfig
 from ngwidgets.background import BackgroundTaskHandler
 import os
+from typing import Any
 from dgs.diagrams import Generators,Generator,Example
-from fastapi.responses import PlainTextResponse, HTMLResponse
+from fastapi.responses import PlainTextResponse, HTMLResponse,FileResponse
 
 class WebServer(InputWebserver):
     """
@@ -49,6 +50,10 @@ class WebServer(InputWebserver):
         def check(generator:str):
             return self.check(generator)
         
+        @app.get('/render/{output_type}/{crc32}')
+        def render(output_type:str,crc32:str):
+            return self.render(output_type,crc32)
+        
     @classmethod
     def examples_path(cls)->str:
         # the root directory (default: examples)
@@ -72,3 +77,42 @@ class WebServer(InputWebserver):
         else:
             msg=f"{generator} is not a valid generator"
             return PlainTextResponse(msg, 404)
+        
+    def render(self, output_type: str, crc32: str) -> Any:
+        """
+        Render a file response based on output type and CRC32 checksum.
+    
+        Args:
+            output_type (str): The desired output file type/extension (without a leading dot).
+            crc32 (str): The CRC32 checksum used to determine the file's name.
+            
+        Returns:
+            Any: A file response which allows for direct rendering, e.g., in wikis.
+        
+        Note:
+            The `crc32` argument can optionally contain the file extension.
+            If provided, the method will strip it before appending the intended output_type.
+    
+        Example:
+            render("pdf", "checksum123.pdf")
+            The method will strip the ".pdf" from "checksum123.pdf" and append the intended ".pdf".
+        """
+        # Allow extension ending for direct rendering, e.g., in wikis
+        ext = "." + output_type
+        
+        # If crc32 ends with the intended file extension, remove the extension
+        if crc32.endswith(ext):
+            crc32 = crc32[:-len(ext)]
+        
+        # Fetch the output directory
+        output_directory = Generator.getOutputDirectory()
+        
+        # Construct the file name and path
+        file_name = f"{crc32}{ext}"
+        file_path = f"{output_directory}/{file_name}"
+        
+        # Generate and return a file response
+        response = FileResponse(file_path)
+        
+        return response
+
