@@ -173,6 +173,9 @@ class Generators(object):
 
 
 class GenerateResult(object):
+    """
+    a single generate result
+    """
 
     def __init__(self, crc32, outputType, path, stdout, stderr):
         ''' 

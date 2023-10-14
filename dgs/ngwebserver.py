@@ -33,14 +33,8 @@ class WebServer(InputWebserver):
         self.bth=BackgroundTaskHandler()
         app.on_shutdown(self.bth.cleanup())
         self.future=None
-         
-        @ui.page('/')
-        async def home(client: Client):
-            return await self.home(client)
-        
-        @ui.page('/settings')
-        async def settings():
-            return await self.settings()
+        self.generators=Generators.generators()
+        self.markup_dict={}
         
         @app.get('/example/{generator:str}')
         def example(generator:str):
@@ -115,4 +109,38 @@ class WebServer(InputWebserver):
         response = FileResponse(file_path)
         
         return response
+    
+    def selectGenerator(self,generator_id:str):
+        try:
+            self.generator=Generators.get(generator_id)
+            html_info=self.generator.getHtmlInfo()
+            self.gen_info.content=html_info
+            self.markup_dict={}
+            for alias in self.generator.aliases:
+                self.markup_dict[alias]=alias
+            self.markup_select.options=self.markup_dict
+            self.markup_select.value=self.generator.aliases[0]
+            self.markup_select.update()
+        except Exception as ex:
+            self.handle_exception(ex)
+    
+    def onGeneratorSelect(self,e):
+        self.selectGenerator(e.value)
+    
+    async def home(self,_client:Client):
+        '''
+        provide the main content page
+        
+        '''
+        self.setup_menu()
+        gen_dict={}
+        for gen in self.generators:
+            gen_dict[gen.id]=gen.name
+        with ui.row():
+            self.generator_select=self.add_select("Generator:",gen_dict).bind_value(self, "generator_name")
+            self.generator_select.change_handler=self.onGeneratorSelect
+            self.markup_select=self.add_select("Markup:",self.markup_dict)
+            self.gen_info=ui.html()
+            self.selectGenerator("graphviz")
+        await self.setup_footer()
 
