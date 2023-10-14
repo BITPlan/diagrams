@@ -77,11 +77,11 @@ class TestWebserver(Basetest):
         """
         test the /check Generators RESTFul access
         """
-        return
+        #return
         expected_status_code=200
         for generator in ["graphviz","plantuml","mscgen"]:
             response=self.checkResponse(f"/check/{generator}", expected_status_code)
-            html=response.html
+            html=response.text
             debug=True
             if debug:
                 print(html)

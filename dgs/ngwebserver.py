@@ -41,11 +41,11 @@ class WebServer(InputWebserver):
         async def settings():
             return await self.settings()
         
-        @ui.page('/example/{generator:str}')
+        @app.get('/example/{generator:str}')
         def example(generator:str):
             return self.example(generator)
         
-        @ui.page('/check/{generator:str}')
+        @app.get('/check/{generator:str}')
         def check(generator:str):
             return self.check(generator)
         
