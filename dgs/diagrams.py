@@ -159,9 +159,9 @@ class Generators(object):
         gens = [
             Generator("graphviz", "GraphViz", "dot", "-V", logo="https://graphviz.org/Resources/app.png", url="https://www.graphviz.org/",
                       aliases=[ 'dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork', 'osage' ],
-                      outputTypes=['dot', 'xdot', 'ps', 'pdf', 'svg', 'fig', 'png', 'gif', 'jpg', 'json', 'imap', 'cmapx']
+                      outputTypes=['png','svg','dot', 'xdot', 'ps', 'pdf', 'fig', 'gif', 'jpg', 'json', 'imap', 'cmapx']
                      ),
-            Generator("mscgen", "Mscgen", "mscgen", "", logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/",  outputTypes=['png', 'eps', 'svg', 'ismap']),
+            Generator("mscgen", "Mscgen", "mscgen", "", logo="http://www.mcternan.me.uk/mscgen/img/msc-sig.png", url="http://www.mcternan.me.uk/mscgen/",  outputTypes=['png', 'svg','eps', 'ismap']),
             Generator("plantuml", "PlantUML", "java -Djava.awt.headless=true -jar " + plantumljar, "-version", aliases=['plantuml'],
                       logo="https://useblocks.com/assets/img/posts/plantuml_logo.png",
                       url="https://plantuml.com",

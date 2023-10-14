@@ -35,7 +35,10 @@ class WebServer(InputWebserver):
         self.future=None
         self.generators=Generators.generators()
         self.generator_id="graphviz"
+        self.alias="dot"
         self.markup_dict={}
+        self.output_type_dict={"png":"png"}
+        self.output_type="png"
         
         @app.get('/example/{generator:str}')
         def example(generator:str):
@@ -111,7 +114,39 @@ class WebServer(InputWebserver):
         
         return response
     
+    def on_render(self,e):
+        """
+        action when render button has been clicked
+        """
+        gen=self.generator
+        alias=self.alias
+        output_type=self.output_type
+        source=self.source_area.value
+        genResult=gen.generate(alias,source,output_type,useCached=True)
+        if not genResult.isValid():
+            msg=f"could not generate {output_type} for {gen.name} ({alias})"
+            raise Exception(msg)
+        html=genResult.asHtml()
+        self.gen_result.content=html
+        pass
+        
+    def on_example(self,e):
+        """
+        action when example button has been clicked
+        """
+        try:
+            example_txt=Example.get(self.alias)
+            self.source_area.value=example_txt
+        except Exception as ex:
+            self.handle_exception(ex)
+    
     def selectGenerator(self,generator_id:str):
+        """
+        select the generator with the given generator_id
+        
+        Args:
+            generator_id(str): the id of the generator to be selected
+        """
         try:
             self.generator=Generators.get(generator_id)
             html_info=self.generator.getHtmlInfo()
@@ -122,6 +157,11 @@ class WebServer(InputWebserver):
             self.markup_select.options=self.markup_dict
             self.markup_select.value=self.generator.aliases[0]
             self.markup_select.update()
+            self.output_type_dict={}
+            for output_type in self.generator.outputTypes:
+                self.output_type_dict[output_type]=output_type
+            self.output_type_select.options=self.output_type_dict
+            self.output_type_select.value=self.generator.outputTypes[0]
         except Exception as ex:
             self.handle_exception(ex)
     
@@ -137,11 +177,26 @@ class WebServer(InputWebserver):
         gen_dict={}
         for gen in self.generators:
             gen_dict[gen.id]=gen.name
-        with ui.row():
-            self.generator_select=self.add_select("Generator:",gen_dict).bind_value(self, "generator_name")
-            self.generator_select.change_handler=self.onGeneratorSelect
-            self.markup_select=self.add_select("Markup:",self.markup_dict)
-            self.gen_info=ui.html()
-            self.generator_select.value=self.generator_id
+        with ui.element("div").classes("w-full h-full"):
+            with ui.splitter() as splitter:
+                with splitter.before:
+                    with ui.row():      
+                        self.generator_select=self.add_select("Generator:",gen_dict).bind_value(self, "generator_name")
+                        self.generator_select.change_handler=self.onGeneratorSelect
+                        self.markup_select=self.add_select("Markup:",self.markup_dict).bind_value(self,"alias")
+                        ui.button("example",on_click=self.on_example)
+            
+                    with ui.row():
+                        self.output_type_select=self.add_select("output",self.output_type_dict).bind_value(self,"output_type")
+                        ui.button("render",on_click=self.on_render)
+                    with ui.row():
+                        self.source_area=ui.textarea(placeholder="enter diagram markup here").props('clearable').props("cols=80").props("rows=25")
+                with splitter.after:
+                    with ui.row():
+                        self.gen_info=ui.html()
+                    with ui.row():
+                        self.gen_result=ui.html()
+        self.generator_select.value=self.generator_id
+           
         await self.setup_footer()
 
