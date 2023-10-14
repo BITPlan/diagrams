@@ -85,3 +85,35 @@ class TestWebserver(Basetest):
             debug=True
             if debug:
                 print(html)
+                
+    def test_render_service(self):
+        """
+        test the diagrams render service
+        """
+        response = self.client.post(
+        "/render/",
+            headers={},
+            json={
+                "generator": "graphviz",
+                "markup": "dot",
+                "source": """digraph d {
+a->b
+}
+""",
+                "types": "png"
+            },
+        )
+        self.assertEqual(200,response.status_code)
+        json_text=response.json()
+        debug=self.debug
+        if debug:
+            print (json_text)
+        expected_json="""{
+  "diagrams": {
+    "png": {
+      "url": "http://testserver/png/0x338668b9.png"
+    }
+  }
+}"""
+        self.assertEquals(expected_json,json_text)
+        pass

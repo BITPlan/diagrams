@@ -222,23 +222,44 @@ class GenerateResult(object):
         valid = os.path.isfile(self.path) and not self.errMsg()
         return valid    
     
-    def asJson(self, baseurl):
-        """ return my result as JSON for the Mediawiki diagrams extension"""
-        errMsg=self.errMsg();
-        if errMsg:
-            jsonTxt="""{
-               "error": "generating %s failed",
-               "message": %s  
-            }""" % (self.outputType,json.dumps(errMsg))
+    
+    def asJson(self, baseurl: str) -> str:
+        """
+        Generate a JSON representation of the result.
+        
+        This function generates a JSON representation of a diagram (or an error)
+        to be used by the Mediawiki diagrams extension.
+    
+        Args:
+            baseurl (str): The base URL where the generated diagram can be found.
+    
+        Returns:
+            str: A JSON string containing either the URL to the generated diagram 
+            or an error message if diagram generation failed.
+        """
+        error_message = self.errMsg()  # Assuming `err_msg` is a method in your class
+        
+        # Removing trailing slash from baseurl if present
+        baseurl = str(baseurl).rstrip("/")
+        
+        if error_message:
+            # Using f-string and json.dumps for better readability and handling of special characters in error_message
+            json_txt = f"""{{
+                "error": "generating {self.output_type} failed",
+                "message": {json.dumps(error_message)}
+            }}"""
         else:
-            jsonTxt = """{
-  "diagrams": {
-    "%s": {
-      "url": "%s/%s/%s.%s"
-    }
-  }
-}""" % (self.outputType,baseurl,self.outputType,self.crc32,self.outputType)
-        return jsonTxt
+            # Using f-string for better readability
+            json_txt = f"""{{
+  "diagrams": {{
+    "{self.outputType}": {{
+      "url": "{baseurl}/{self.outputType}/{self.crc32}.{self.outputType}"
+    }}
+  }}
+}}"""
+    
+        return json_txt
+
 
 class Generator(object):
     """ a diagram generator """

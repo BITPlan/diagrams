@@ -12,9 +12,16 @@ from ngwidgets.background import BackgroundTaskHandler
 import os
 from typing import Any
 from dgs.diagrams import Generators,Generator,Example
-from fastapi.responses import PlainTextResponse, HTMLResponse,FileResponse
-from aiohttp.web_routedef import options
+from fastapi.responses import JSONResponse, PlainTextResponse, HTMLResponse,FileResponse
+from pydantic import BaseModel
+from fastapi import Request
 
+class RenderOptions(BaseModel):
+    generator: str
+    source: str
+    markup: str = "dot"
+    types: str | None = None
+    
 class WebServer(InputWebserver):
     """
     WebServer class that manages the server 
@@ -52,6 +59,10 @@ class WebServer(InputWebserver):
         @app.get('/render/{output_type}/{crc32}')
         def render(output_type:str,crc32:str):
             return self.render(output_type,crc32)
+        
+        @app.post('/render')
+        async def render_service(render_options:RenderOptions,request: Request):
+            return await self.render_service(render_options,request)
         
     @classmethod
     def examples_path(cls)->str:
@@ -113,6 +124,19 @@ class WebServer(InputWebserver):
         # Generate and return a file response
         response = FileResponse(file_path)
         
+        return response
+    
+    async def render_service(self,render_options:RenderOptions,request:Request):
+        """
+        handle post request
+        """
+        gen=Generators.get(render_options.generator)
+        target_format=render_options.types
+        if target_format is None:
+            target_format="png"
+        result=gen.generate(render_options.markup,render_options.source,target_format)
+        result_json=result.asJson(request.base_url)
+        response=JSONResponse(content=result_json)
         return response
     
     def on_render(self,_e):
