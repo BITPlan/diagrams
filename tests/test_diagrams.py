@@ -81,11 +81,11 @@ class TestDiagrams(Basetest):
         result=gen.generate('unknownalias','garbage input',"png")    
         json=result.asJson('http://www.doe.com') 
         debug=self.debug
-        #debug=True
+        debug=True
         if debug:
             print(f"json:{json}")
         # there is an image version of the error
         assert os.path.isfile(result.path)
-        # which needs to be remove to make the test reproducible
+        # which needs to be removed to make the test reproducible
         os.remove(result.path)
         assert "error" in json
