@@ -245,7 +245,7 @@ class GenerateResult(object):
         if error_message:
             # Using f-string and json.dumps for better readability and handling of special characters in error_message
             json_txt = f"""{{
-                "error": "generating {self.output_type} failed",
+                "error": "generating {self.outpuType} failed",
                 "message": {json.dumps(error_message)}
             }}"""
         else:
