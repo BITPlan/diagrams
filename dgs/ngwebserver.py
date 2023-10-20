@@ -143,16 +143,19 @@ class WebServer(InputWebserver):
         """
         action when render button has been clicked
         """
-        gen=self.generator
-        alias=self.alias
-        output_type=self.output_type
-        source=self.source_area.value
-        genResult=gen.generate(alias,source,output_type,useCached=True)
-        if not genResult.isValid():
-            msg=f"could not generate {output_type} for {gen.name} ({alias})"
-            raise Exception(msg)
-        html=genResult.asHtml()
-        self.gen_result.content=html
+        try:
+            gen=self.generator
+            alias=self.alias
+            output_type=self.output_type
+            source=self.source_area.value
+            genResult=gen.generate(alias,source,output_type,useCached=True)
+            if not genResult.isValid():
+                msg=f"could not generate {output_type} for {gen.name} ({alias})"
+                raise Exception(msg)
+            html=genResult.asHtml()
+            self.gen_result.content=html
+        except Exception as ex:
+            self.handle_exception(ex, self.do_trace)
         pass
         
     def on_example(self,_e):
