@@ -13,12 +13,14 @@ maintainers = [
 readme = "README.md"
 license= "Apache-2.0"
 dependencies = [
-	"flask",
-    # nicegui widgets
-    "ngwidgets>=0.1.4",
-    # pydantic
-    # https://pypi.org/project/pydantic/
-    "pydantic>=2.4.2",
+  "flask",
+  # nicegui,
+  nicegui,
+  # nicegui widgets
+  "ngwidgets>=0.1.4",
+  # pydantic
+  # https://pypi.org/project/pydantic/
+  "pydantic>=2.4.2",
 ]
 
 requires-python = ">=3.8"
@@ -59,5 +61,3 @@ only-include = ["dgs","diagrams_examples"]
 
 [project.scripts]
 diagrams= "dgs.diagrams_cmd:main"
-
-
