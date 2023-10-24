@@ -1,5 +1,5 @@
 # diagrams
-Online diagrams-Service supporting graphviz and plantuml markup
+Online diagrams-Service supporting graphviz, mscgen and plantuml markup
 
 [![Join the discussion at https://github.com/BITPlan/diagrams/discussions](https://img.shields.io/github/discussions/BITPlan/diagrams)](https://github.com/BITPlan/diagrams/discussions)
 [![pypi](https://img.shields.io/pypi/pyversions/online-diagrams)](https://pypi.org/project/online-diagrams/)
@@ -15,7 +15,7 @@ Online diagrams-Service supporting graphviz and plantuml markup
 
 ### Demo
 * [demo](http://diagrams.bitplan.com)
-
+* [demo - nicegui based](http://diagrams2.bitplan.com)
 
 ### Authors
 * [Wolfgang Fahl](http://www.bitplan.com/Wolfgang_Fahl)
