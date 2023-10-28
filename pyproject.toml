@@ -15,7 +15,7 @@ license= "Apache-2.0"
 dependencies = [
   "flask",
   # nicegui widgets
-  "ngwidgets>=0.2.0",
+  "ngwidgets>=0.2.1",
   # pydantic
   # https://pypi.org/project/pydantic/
   "pydantic>=2.4.2",
