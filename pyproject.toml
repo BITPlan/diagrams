@@ -14,10 +14,8 @@ readme = "README.md"
 license= "Apache-2.0"
 dependencies = [
   "flask",
-  # nicegui,
-  "nicegui",
   # nicegui widgets
-  "ngwidgets>=0.1.4",
+  "ngwidgets>=0.2.0",
   # pydantic
   # https://pypi.org/project/pydantic/
   "pydantic>=2.4.2",
