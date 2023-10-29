@@ -75,13 +75,13 @@ class TestDiagrams(Basetest):
         '''
         test provoked error
         '''
+        debug=self.debug
+        debug=True
         genid=Generators.generatorIdForAlias("plantuml")
         gen=Generators.get(genid)
         # provoke an error
-        result=gen.generate('unknownalias','garbage input',"png")    
+        result=gen.generate('unknownalias','garbage input',"png",debug=debug)    
         json=result.asJson('http://www.doe.com') 
-        debug=self.debug
-        debug=True
         if debug:
             print(f"json:{json}")
         # there is an image version of the error

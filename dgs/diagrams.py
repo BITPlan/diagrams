@@ -342,38 +342,45 @@ class Generator(object):
             txt="@startuml\n%s\n@enduml\n" % txt
         return txt    
 
-    def generate(self, alias, txt, outputType, useCached=True):
-        ''' 
-        generate
+    def generate(self, alias: str, txt: str, outputType: str, useCached: bool = True) -> GenerateResult:
+        """
+        Generates output based on the provided text and parameters.
         
-        txt(string): the text to generate from e.g. graphviz/plantuml code
-        outputType(string): e.g. "png", "svg"
-        useCached(boolean): True - if a cached result should be returned if it is available
-        '''
-        txt=self.wrap(txt)
+        Args:
+        alias (str): The alias to be used for generating the output.
+        txt (str): The text to be processed for generating the output.
+        outputType (str): The type of output to be generated (e.g., "png", "svg").
+        useCached (bool): If True, returns cached results if available. Defaults to True.
+        
+        Returns:
+        GenerateResult: An object containing details about the generation process and results.
+        """
+        txt = self.wrap(txt)
         hashId = Generator.getHash(txt)
-        inputPath = "%s%s.%s" % (Generator.getOutputDirectory(), hashId, 'txt')
-        stdout = None
-        stderr = None   
-        if not (os.path.isfile(inputPath) and  useCached):
+        inputPath = f"{Generator.getOutputDirectory()}{hashId}.txt"
+        
+        stdout = stderr = None
+        if not (os.path.isfile(inputPath) and useCached):
             with open(inputPath, "w") as text_file:
-                text_file.write("%s" % txt)
-        outputPath = "%s%s.%s" % (Generator.getOutputDirectory(), hashId, outputType)
+                text_file.write(txt)
+                
+        outputPath = f"{Generator.getOutputDirectory()}{hashId}.{outputType}"
         if os.path.isfile(outputPath) and useCached:
             if self.debug:
-                print("cached %s #%s from %s" % (outputType, hashId, outputPath))     
-        else:         
+                print(f"cached {outputType} #{hashId} from {outputPath}")
+        else:
             if self.debug:
-                print("generating %s #%s to %s" % (outputType, hashId, outputPath))
+                print(f"generating {outputType} #{hashId} to {outputPath}")
             if self.id == "graphviz":
-                args = "-T%s %s -o  %s" % (outputType, inputPath, outputPath)
+                args = f"-T{outputType} {inputPath} -o {outputPath}"
             elif self.id == "mscgen":
-                args = "-T%s -i %s -o  %s" % (outputType, inputPath, outputPath)    
+                args = f"-T{outputType} -i {inputPath} -o {outputPath}"
             else:
-                args = "-t%s %s" % (outputType, inputPath)    
-                alias = self.cmd    
+                args = f"-t{outputType} {inputPath}"
+                alias = self.cmd
             if self.gencmd is None:
                 self.check()
-            stdout, stderr = self.gencmd.callalias(alias, args)    
-        result = GenerateResult(hashId, outputType, outputPath, stdout, stderr)     
+            stdout, stderr = self.gencmd.callalias(alias, args)
+            
+        result = GenerateResult(hashId, outputType, outputPath, stdout, stderr)
         return result
