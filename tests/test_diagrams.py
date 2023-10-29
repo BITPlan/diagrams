@@ -79,8 +79,9 @@ class TestDiagrams(Basetest):
         debug=True
         genid=Generators.generatorIdForAlias("plantuml")
         gen=Generators.get(genid)
+        gen.debug=debug
         # provoke an error
-        result=gen.generate('unknownalias','garbage input',"png",debug=debug)    
+        result=gen.generate('unknownalias','garbage input',"png")    
         json=result.asJson('http://www.doe.com') 
         if debug:
             print(f"json:{json}")
