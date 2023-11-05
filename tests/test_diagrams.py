@@ -5,7 +5,7 @@ Created on 2020-02-13
 '''
 import os
 from dgs.diagrams import Command,Generator,Generators,Example
-from tests.basetest import Basetest
+from ngwidgets.basetest import Basetest
 
 class TestDiagrams(Basetest):
     """ Test the online diagrams service"""

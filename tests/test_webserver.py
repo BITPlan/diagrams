@@ -3,7 +3,7 @@ Created on 2023-10-07
 
 @author: wf
 '''
-from tests.basetest import Basetest
+from ngwidgets.basetest import Basetest
 from fastapi.testclient import TestClient
 from dgs.ngwebserver import WebServer
 from ngwidgets.cmd import WebserverCmd
