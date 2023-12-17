@@ -4,6 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "online-diagrams"
+description = "nicegui based online diagrams rendering tool for e.g. plantuml and graphviz"
+keywords = ["nicegui", "plantuml", "graphviz"]
 authors = [
   {name = "Wolfgang Fahl", email = "wf@bitplan.com"}
 ]
@@ -35,7 +37,7 @@ classifiers=[
     "Intended Audience :: Education",
     "License :: OSI Approved :: Apache Software License"
 ]
-dynamic = ["version", "description"]
+dynamic = ["version"]
 
 [tool.hatch.version]
 path = "dgs/__init__.py"
