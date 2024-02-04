@@ -177,6 +177,7 @@ class DiagramsSolution(InputWebSolution):
             genResult = gen.generate(alias, source, output_type, useCached=True)
             if not genResult.isValid():
                 msg = f"could not generate {output_type} for {gen.name} ({alias})"
+                msg += f"\n{genResult.errMsg()}"
                 raise Exception(msg)
             html = genResult.asHtml()
             self.gen_result.content = html

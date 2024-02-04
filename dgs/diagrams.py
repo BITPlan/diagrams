@@ -416,7 +416,7 @@ class Generator(object):
         return hashId
 
     def wrap(self, txt):
-        """wraot the given text"""
+        """wrap the given text"""
         if self.id == "plantuml":
             txt = "@startuml\n%s\n@enduml\n" % txt
         return txt
