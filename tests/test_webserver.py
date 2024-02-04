@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from ngwidgets.basetest import Basetest
 from ngwidgets.cmd import WebserverCmd
 
-from dgs.ngwebserver import WebServer
+from dgs.ngwebserver import DiagramsWebServer
 
 
 class TestWebserver(Basetest):
@@ -17,13 +17,13 @@ class TestWebserver(Basetest):
 
     def setUp(self, debug=False, profile=True):
         Basetest.setUp(self, debug=debug, profile=profile)
-        config = WebServer.get_config()
+        config = DiagramsWebServer.get_config()
         # use a different port for testing then for production
         config.default_port += 10000
-        cmd = WebserverCmd(config, WebServer)
+        cmd = WebserverCmd(config, DiagramsWebServer)
         argv = []
         args = cmd.cmd_parse(argv)
-        self.ws = WebServer()
+        self.ws = DiagramsWebServer()
         self.ws_thread = threading.Thread(
             target=self.ws.run, name="webservice", kwargs={"args": args}
         )
