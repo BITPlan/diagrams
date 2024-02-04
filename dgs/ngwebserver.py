@@ -14,7 +14,7 @@ from fastapi.responses import (
     PlainTextResponse,
 )
 from ngwidgets.background import BackgroundTaskHandler
-from ngwidgets.input_webserver import InputWebserver
+from ngwidgets.input_webserver import InputWebserver, InputWebSolution
 from ngwidgets.progress import NiceguiProgressbar
 from ngwidgets.webserver import WebserverConfig
 from nicegui import Client, app, ui
@@ -31,7 +31,7 @@ class RenderOptions(BaseModel):
     types: str | None = None
 
 
-class WebServer(InputWebserver):
+class DiagramsWebServer(InputWebserver):
     """
     WebServer class that manages the server
 
@@ -41,25 +41,24 @@ class WebServer(InputWebserver):
     def get_config(cls) -> WebserverConfig:
         copy_right = "(c)2023 BITPlan GmbH"
         config = WebserverConfig(
-            copy_right=copy_right, version=Version(), default_port=5003
+            short_name="diagrams",
+            copy_right=copy_right,
+            version=Version(),
+            default_port=5003,
         )
-        return config
+        server_config = WebserverConfig.get(config)
+        server_config.solution_class = DiagramsSolution
+        return server_config
 
     def __init__(self):
         """Constructs all the necessary attributes for the WebServer object."""
-        InputWebserver.__init__(self, config=WebServer.get_config())
-        self.input_source = None
+        InputWebserver.__init__(self, config=DiagramsWebServer.get_config())
         self.output_path = None
         self.bth = BackgroundTaskHandler()
         app.on_shutdown(self.bth.cleanup())
         self.future = None
         self.generators = Generators.generators()
-        self.generator_id = "graphviz"
-        self.alias = "dot"
-        self.markup_dict = {}
-        self.output_type_dict = {"png": "png"}
-        self.output_type = "png"
-
+        
         @app.get("/example/{generator:str}")
         def example(generator: str):
             return self.example(generator)
@@ -76,6 +75,7 @@ class WebServer(InputWebserver):
         async def render_service(render_options: RenderOptions, request: Request):
             return await self.render_service(render_options, request)
 
+    
     @classmethod
     def examples_path(cls) -> str:
         # the root directory (default: examples)
@@ -152,7 +152,19 @@ class WebServer(InputWebserver):
         result_json = result.asJson(request.base_url)
         response = JSONResponse(content=result_json)
         return response
-
+    
+class DiagramsSolution(InputWebSolution): 
+    """
+    diagrams client specific UI
+    """
+    def __init__(self, webserver:DiagramsWebServer, client: Client):
+        super().__init__(webserver, client)  # Call to the superclass constructor
+        self.generator_id = "graphviz"
+        self.alias = "dot"
+        self.markup_dict = {}
+        self.output_type_dict = {"png": "png"}
+        self.output_type = "png"
+     
     def on_render(self, _e):
         """
         action when render button has been clicked
@@ -169,7 +181,7 @@ class WebServer(InputWebserver):
             html = genResult.asHtml()
             self.gen_result.content = html
         except Exception as ex:
-            self.handle_exception(ex, self.do_trace)
+            self.handle_exception(ex)
         pass
 
     def on_example(self, _e):
@@ -219,21 +231,16 @@ class WebServer(InputWebserver):
     def onGeneratorSelect(self, e):
         self.selectGenerator(e.value)
 
-    async def home(self, _client: Client):
-        """
-        provide the main content page
-
-        """
-        self.setup_menu()
+    async def setup_home(self):
         gen_dict = {}
-        for gen in self.generators:
+        for gen in self.webserver.generators:
             gen_dict[gen.id] = gen.name
         with ui.element("div").classes("w-full h-full"):
             with ui.splitter() as splitter:
                 with splitter.before:
                     with ui.row():
                         self.generator_select = self.add_select(
-                            "Generator:", gen_dict,on_change=self.onGeneratorSelect
+                            "Generator:", gen_dict, on_change=self.onGeneratorSelect
                         ).bind_value(self, "generator_name")
                         self.markup_select = self.add_select(
                             "Markup:", self.markup_dict
@@ -258,5 +265,10 @@ class WebServer(InputWebserver):
                     with ui.row():
                         self.gen_result = ui.html()
         self.selectGenerator(self.generator_id)
+        
+    async def home(self):
+        """
+        provide the main content page
 
-        await self.setup_footer()
+        """
+        await(self.setup_content_div(self.setup_home))

@@ -1,6 +1,0 @@
-// twopi example
-digraph round
-{
-     a -> b -> c;
-     b -> d;
-}

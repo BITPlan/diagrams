@@ -1,88 +1,96 @@
-'''
+"""
 Created on 2020-02-13
 
 @author: wf
-'''
+"""
 import os
-from dgs.diagrams import Command,Generator,Generators,Example
+
 from ngwidgets.basetest import Basetest
 
+from dgs.diagrams import Command, Example, Generator, Generators
+
+
 class TestDiagrams(Basetest):
-    """ Test the online diagrams service"""
+    """Test the online diagrams service"""
 
     def testCommands(self):
         """
         test some commands
         """
-        cmds=[Command("pwd","",debug=True),Command("java","-version",debug=True),Command("dot","-V",debug=True),Command("mscgen","",debug=True)]
+        cmds = [
+            Command("pwd", "", debug=True),
+            Command("java", "-version", debug=True),
+            Command("dot", "-V", debug=True),
+            Command("mscgen", "", debug=True),
+        ]
         for cmd in cmds:
             cmd.check()
         pass
-    
+
     def testGetGenerator(self):
-        generators=["graphviz","mscgen","plantuml"]
+        generators = ["graphviz", "mscgen", "plantuml"]
         for generator in generators:
-            gen=Generators.get(generator)
+            gen = Generators.get(generator)
             assert gen is not None
-            info=gen.getHtmlInfo()
+            info = gen.getHtmlInfo()
             if self.debug:
                 print(info)
-    
+
     def testGeneratorCheck(self):
         for gen in Generators.generators():
-            gen.debug=self.debug
+            gen.debug = self.debug
             gen.check()
-            
+
     def testGeneratorVersion(self):
         for gen in Generators.generators():
-            gen.debug=self.debug
-            version=gen.getVersion()    
+            gen.debug = self.debug
+            version = gen.getVersion()
             if self.debug:
-                print(version)    
-                
+                print(version)
+
     def testGeneratorForAlias(self):
         for gen in Generators.generators():
-            gen.debug=self.debug
+            gen.debug = self.debug
             for alias in gen.aliases:
-                genid=Generators.generatorIdForAlias(alias)
-                assert genid==gen.id
-            
+                genid = Generators.generatorIdForAlias(alias)
+                assert genid == gen.id
+
     def testExamples(self):
         for gen in Generators.generators():
             for alias in gen.aliases:
-                txt=Example.get(alias)
+                txt = Example.get(alias)
                 if self.debug:
-                    print (txt)
-                assert not "no example for" in txt            
+                    print(txt)
+                assert not "no example for" in txt
 
     def testGenerators(self):
         """
         test all generators
         """
         if self.debug:
-            print ("outputDirectory is: %s" % (Generator.getOutputDirectory()))
+            print("outputDirectory is: %s" % (Generator.getOutputDirectory()))
         for gen in Generators.generators():
-            gen.debug=self.debug
+            gen.debug = self.debug
             for alias in gen.aliases:
-                txt=Example.get(alias)
-                result=gen.generate(alias,txt,"png")
-                valid =result.isValid()
+                txt = Example.get(alias)
+                result = gen.generate(alias, txt, "png")
+                valid = result.isValid()
                 if not valid:
                     print(result.errMsg())
                 assert valid
-            
+
     def testGenerateResult(self):
-        '''
+        """
         test provoked error
-        '''
-        debug=self.debug
-        debug=True
-        genid=Generators.generatorIdForAlias("plantuml")
-        gen=Generators.get(genid)
-        gen.debug=debug
+        """
+        debug = self.debug
+        debug = True
+        genid = Generators.generatorIdForAlias("plantuml")
+        gen = Generators.get(genid)
+        gen.debug = debug
         # provoke an error
-        result=gen.generate('unknownalias','garbage input',"png")    
-        json=result.asJson('http://www.doe.com') 
+        result = gen.generate("unknownalias", "garbage input", "png")
+        json = result.asJson("http://www.doe.com")
         if debug:
             print(f"json:{json}")
         # there is an image version of the error

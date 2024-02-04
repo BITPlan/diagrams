@@ -3,21 +3,20 @@ Created on 2023-10-05
 
 @author: wf
 """
-from dataclasses import dataclass
+from ngwidgets.yamlable import lod_storable
 
 import dgs
 
 
-@dataclass
+@lod_storable
 class Version:
     """
-    Version handling for nicepdf
+    Version handling for diagrams
     """
-
     name = "diagrams"
     version = dgs.__version__
     date = "2020-02-14"
-    updated = "2023-10-28"
+    updated = "2024-02-04"
     description = (
         "Online diagram creation and rendering service for plantuml and graphviz"
     )
@@ -28,7 +27,7 @@ class Version:
     chat_url = "https://github.com/BITPlan/diagrams/discussions"
     cm_url = "https://github.com/BITPlan/diagrams"
 
-    license = f"""Copyright 2020-2023 contributors. All rights reserved.
+    license = f"""Copyright 2020-2024 contributors. All rights reserved.
 
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
