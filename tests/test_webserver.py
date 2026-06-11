@@ -3,53 +3,17 @@ Created on 2023-10-07
 
 @author: wf
 """
-import threading
-
-from fastapi.testclient import TestClient
-from ngwidgets.basetest import Basetest
-from ngwidgets.cmd import WebserverCmd
+from ngwidgets.webserver_test import WebserverTest
 
 from dgs.ngwebserver import DiagramsWebServer
+from dgs.diagrams_cmd import DiagramsCmd
 
 
-class TestWebserver(Basetest):
+class TestWebserver(WebserverTest):
     """Test the online diagrams service webserver"""
 
     def setUp(self, debug=False, profile=True):
-        Basetest.setUp(self, debug=debug, profile=profile)
-        config = DiagramsWebServer.get_config()
-        # use a different port for testing then for production
-        config.default_port += 10000
-        cmd = WebserverCmd(config, DiagramsWebServer)
-        argv = []
-        args = cmd.cmd_parse(argv)
-        self.ws = DiagramsWebServer()
-        self.ws_thread = threading.Thread(
-            target=self.ws.run, name="webservice", kwargs={"args": args}
-        )
-        self.ws_thread.start()
-        self.client = TestClient(self.ws.app)
-
-    def tearDown(self):
-        """Shut down the webserver thread and perform cleanup."""
-        # Check if the webserver thread is alive and try to shut it down
-        if self.ws_thread.is_alive():
-            # Logic to gracefully shut down the web server
-            # (If possible, use an API call or set a flag that will stop the server)
-            self.ws.stop()  # assuming there is a stop method in your WebServer class
-
-            # Wait for the thread to finish
-            self.ws_thread.join(timeout=2)  # provide a timeout to avoid hanging forever
-
-            # If thread is still alive after timeout, terminate it forcefully (if possible)
-            if self.ws_thread.is_alive():
-                print(
-                    "Warning: WebServer thread could not be stopped gracefully and was forcefully terminated."
-                )
-                # Potential forceful shutdown logic here, if possible
-
-        # Additional cleanup logic here (if needed)
-        self.client.close()  # clean up the TestClient
+        super().setUp(DiagramsWebServer, DiagramsCmd, debug=debug, profile=profile)
 
     def checkResponse(self, path: str, status_code: int) -> "Response":
         """
