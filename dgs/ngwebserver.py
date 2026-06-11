@@ -13,7 +13,6 @@ from fastapi.responses import (
     JSONResponse,
     PlainTextResponse,
 )
-from ngwidgets.background import BackgroundTaskHandler
 from ngwidgets.input_webserver import InputWebserver, InputWebSolution
 from ngwidgets.progress import NiceguiProgressbar
 from ngwidgets.webserver import WebserverConfig
@@ -54,9 +53,6 @@ class DiagramsWebServer(InputWebserver):
         """Constructs all the necessary attributes for the WebServer object."""
         InputWebserver.__init__(self, config=DiagramsWebServer.get_config())
         self.output_path = None
-        self.bth = BackgroundTaskHandler()
-        app.on_shutdown(self.bth.cleanup())
-        self.future = None
         self.generators = Generators.generators()
         
         @app.get("/example/{generator:str}")

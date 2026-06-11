@@ -16,7 +16,7 @@ class Version:
     name = "diagrams"
     version = dgs.__version__
     date = "2020-02-14"
-    updated = "2024-02-04"
+    updated = "2026-06-11"
     description = (
         "Online diagram creation and rendering service for plantuml and graphviz"
     )
