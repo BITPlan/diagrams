@@ -1,11 +1,13 @@
 import json
 import os.path
 import re
+import urllib.request
 import zlib
 from os.path import expanduser
 from pathlib import Path
-from subprocess import PIPE, Popen
 from sys import platform
+
+from basemkit.shell import Shell
 
 
 class ConfigurationError(Exception):
@@ -61,71 +63,49 @@ class Command(object):
         self.cmd = cmd
         self.timeout = timeout
         self.versionOption = versionOption
-        self.cmdpath = None
         self.debug = debug
 
     def call(self, args):
         """call me with the given args"""
-        return self.docall(self.cmdpath, self.cmd, args)
+        return self._run(self.cmd, args)
 
     def callalias(self, alias, args):
         """call me with the given args"""
-        return self.docall(self.cmdpath, alias, args)
+        return self._run(alias, args)
 
-    def docall(self, cmdpath, cmd, args):
-        """call with a specific path and command"""
-        cmdline = "%s%s %s" % (cmdpath, cmd, str(args))
+    def _run(self, cmd, args):
+        """run cmd with args via Shell, return (stdout_bytes, stderr_bytes)"""
+        cmdline = f"{cmd} {args}"
         if self.debug:
-            print("calling %s" % cmdline)
-        process = Popen(cmdline, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            print(f"calling {cmdline}")
         try:
-            stdout, stderr = process.communicate(timeout=self.timeout)
+            proc = Shell().run(cmdline, timeout=self.timeout, debug=self.debug)
+            stdout = proc.stdout.encode("utf-8") if proc.stdout else b""
+            stderr = proc.stderr.encode("utf-8") if proc.stderr else b""
             if self.debug:
-                if stdout is not None:
-                    print("stdout: %s" % stdout.decode("utf-8"))
-                if stderr is not None:
-                    print("stderr: %s" % stderr.decode("utf-8"))
+                if stdout:
+                    print(f"stdout: {proc.stdout}")
+                if stderr:
+                    print(f"stderr: {proc.stderr}")
             return stdout, stderr
         except Exception:
-            process.kill()
-            process.wait()  # Ensure the process has terminated
             return None, None
 
     def check(self):
-        """
-        check
-        """
-        cmdpaths = []
-        # do we know the cmdpath?
-        if self.cmdpath is None:
-            # no we need to try multiple options in a specific order
-            # prio #1: $HOME/bin
-            home = expanduser("~")
-            cmdpaths.append(home + "/bin/")
-            # prio #2: e.g. Macports
-            if platform == "darwin":
-                cmdpaths.append("/opt/local/bin/")
-            # prio #3: default path / no path
-            # no path - use default PATH
-            cmdpaths.append("")
-        else:
-            # we know the valid path
-            cmdpaths.append(self.cmdpath)
-        for cmdpath in cmdpaths:
-            stdout, stderr = self.docall(cmdpath, self.cmd, self.versionOption)
-            stdoutTxt = None
-            stderrTxt = None
-            if stdout is not None:
-                stdoutTxt = stdout.decode("utf-8")
-            if stderr is not None:
-                stderrTxt = stderr.decode("utf-8")
-            if (
-                not "not found" in stderrTxt
-                and not "No such file or directory" in stderrTxt
-            ):
-                self.cmdpath = cmdpath
-                return stdoutTxt, stderrTxt
-        return None, None
+        """check if the command works"""
+        try:
+            proc = Shell().run(
+                f"{self.cmd} {self.versionOption}",
+                timeout=self.timeout,
+                debug=self.debug,
+            )
+            stdout = proc.stdout or ""
+            stderr = proc.stderr or ""
+            if "not found" in stderr or "No such file" in stderr:
+                return None, None
+            return stdout, stderr
+        except Exception:
+            return None, None
 
 
 class Generators(object):
@@ -153,10 +133,20 @@ class Generators(object):
                 return gen.id
         return None
 
+    DOWNLOAD_URL = "http://sourceforge.net/projects/plantuml/files/plantuml.jar/download"
+
     @staticmethod
     def plantuml_jar_path():
         example_path = Example.get_base_path()
-        return example_path + "/plantuml.jar"
+        dev_path = f"{example_path}/plantuml.jar"
+        if os.path.isfile(dev_path):
+            return dev_path
+        cached_path = f"{Generator.getOutputDirectory()}plantuml.jar"
+        if os.path.isfile(cached_path):
+            return cached_path
+        print("downloading plantuml.jar (once) to %s" % cached_path)
+        urllib.request.urlretrieve(Generators.DOWNLOAD_URL, cached_path)
+        return cached_path
 
     @staticmethod
     def generators():

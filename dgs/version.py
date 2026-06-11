@@ -17,6 +17,7 @@ class Version:
     version = dgs.__version__
     date = "2020-02-14"
     updated = "2026-06-11"
+    issue = "https://github.com/BITPlan/diagrams/issues/19"
     description = (
         "Online diagram creation and rendering service for plantuml and graphviz"
     )
