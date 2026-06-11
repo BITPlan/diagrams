@@ -19,7 +19,6 @@ Online diagrams-Service supporting graphviz, mscgen and plantuml markup
 
 ### Demo
 * [demo](http://diagrams.bitplan.com)
-* [demo - nicegui based](http://diagrams2.bitplan.com)
 
 ### Authors
 * [Wolfgang Fahl](http://www.bitplan.com/Wolfgang_Fahl)
