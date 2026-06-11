@@ -133,5 +133,5 @@ a->b
     }
   }
 }"""
-        self.assertEquals(expected_json, json_text)
+        self.assertEqual(expected_json, json_text)
         pass
