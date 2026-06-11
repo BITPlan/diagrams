@@ -27,9 +27,10 @@ autoinstall() {
 autoinstall dot graphviz
 autoinstall mscgen mscgen
 autoinstall java openjdk-8-jdk
-if [ ! -f plantuml.jar ]
+PLANTUML_JAR="diagrams_examples/plantuml.jar"
+if [ ! -f "$PLANTUML_JAR" ]
 then
   echo "downloading plantuml"
-  curl -L http://sourceforge.net/projects/plantuml/files/plantuml.jar/download -o plantuml.jar
+  curl -Lfs http://sourceforge.net/projects/plantuml/files/plantuml.jar/download -o "$PLANTUML_JAR"
 fi
 pip install .

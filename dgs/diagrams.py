@@ -154,14 +154,13 @@ class Generators(object):
         return None
 
     @staticmethod
+    def plantuml_jar_path():
+        example_path = Example.get_base_path()
+        return example_path + "/plantuml.jar"
+
+    @staticmethod
     def generators():
-        scriptdir = os.path.dirname(os.path.abspath(__file__))
-        for plantumlpath in [".", ".."]:
-            plantumljar = scriptdir + "/" + plantumlpath + "/plantuml.jar"
-            if os.path.isfile(plantumljar):
-                break
-        if plantumljar is None:
-            raise Exception("plantuml.jar not found in %s or .. of it", scriptdir)
+        plantumljar = Generators.plantuml_jar_path()
         gens = [
             Generator(
                 "graphviz",
