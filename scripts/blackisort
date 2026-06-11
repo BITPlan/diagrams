@@ -1,7 +1,8 @@
 #!/bin/bash
-# WF 2024-01-10
-package=dgs
-isort tests/*.py
-black tests/*.py
-isort $package/*.py
-black $package/*.py
+# WF 2025-07-23
+packages="tests dgs diagrams_examples"
+for package in $packages
+do
+  isort $package/*.py
+  black $package/*.py
+done

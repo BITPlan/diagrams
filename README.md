@@ -6,12 +6,16 @@ Online diagrams-Service supporting graphviz, mscgen and plantuml markup
 [![Github Actions Build](https://github.com/BITPlan/diagrams/actions/workflows/build.yml/badge.svg)](https://github.com/BITPlan/diagrams/actions/workflows/build.yml)
 [![PyPI Status](https://img.shields.io/pypi/v/online-diagrams.svg)](https://pypi.python.org/pypi/online-diagrams/)
 [![GitHub issues](https://img.shields.io/github/issues/BITPlan/diagrams.svg)](https://github.com/BITPlan/diagrams/issues)
-[![GitHub issues](https://img.shields.io/github/issues-closed/BITPlan/diagrams.svg)](https://github.com/BITPlan/diagrams/issues/?q=is%3Aissue+is%3Aclosed)
-[![GitHub](https://img.shields.io/github/license/BITPlan/diagrams.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/BITPlan/diagrams.svg)](https://github.com/BITPlan/diagrams/issues/?q=is%3Aissue+is%3Aclosed)
+[![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://BITPlan.github.io/diagrams/)
+[![License](https://img.shields.io/github/license/BITPlan/diagrams.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![BITPlan](http://wiki.bitplan.com/images/wiki/thumb/3/38/BITPlanLogoFontLessTransparent.png/198px-BITPlanLogoFontLessTransparent.png)](http://www.bitplan.com)
 
 ### Documentation
 * [BITPlan Wiki](http://wiki.bitplan.com/index.php/Diagrams)
+
+### Requirements
+* Python 3.9 up to 3.13
 
 ### Demo
 * [demo](http://diagrams.bitplan.com)
