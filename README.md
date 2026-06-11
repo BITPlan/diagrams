@@ -15,7 +15,7 @@ Online diagrams-Service supporting graphviz, mscgen and plantuml markup
 * [BITPlan Wiki](http://wiki.bitplan.com/index.php/Diagrams)
 
 ### Requirements
-* Python 3.9 up to 3.13
+* Python 3.10 up to 3.13
 
 ### Demo
 * [demo](http://diagrams.bitplan.com)
