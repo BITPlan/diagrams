@@ -27,7 +27,7 @@ class Version:
     chat_url = "https://github.com/BITPlan/diagrams/discussions"
     cm_url = "https://github.com/BITPlan/diagrams"
 
-    license = f"""Copyright 2020-2024 contributors. All rights reserved.
+    license = f"""Copyright 2020-2026 contributors. All rights reserved.
 
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
