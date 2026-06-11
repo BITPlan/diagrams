@@ -4,6 +4,7 @@ Created on 2023-10-07
 @author: wf
 """
 from ngwidgets.webserver_test import WebserverTest
+from starlette.responses import Response
 
 from dgs.ngwebserver import DiagramsWebServer
 from dgs.diagrams_cmd import DiagramsCmd
@@ -15,7 +16,7 @@ class TestWebserver(WebserverTest):
     def setUp(self, debug=False, profile=True):
         super().setUp(DiagramsWebServer, DiagramsCmd, debug=debug, profile=profile)
 
-    def checkResponse(self, path: str, status_code: int) -> "Response":
+    def checkResponse(self, path: str, status_code: int) -> Response:
         """
         check the response for the given path for the given status code
 
