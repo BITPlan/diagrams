@@ -138,7 +138,20 @@ class DiagramsWebServer(InputWebserver):
         """
         handle post request
         """
+        # resolve generator by id, falling back to alias resolution
+        # (e.g. "graphviz"/"dot") - see issue #13
         gen = Generators.get(render_options.generator)
+        if gen is None:
+            gen_id = Generators.generatorIdForAlias(render_options.generator)
+            if gen_id is not None:
+                gen = Generators.get(gen_id)
+        if gen is None:
+            known = sorted(Generators.generatorDict.keys())
+            msg = (
+                f"unknown generator '{render_options.generator}' "
+                f"- known generators: {', '.join(known)}"
+            )
+            return JSONResponse(content={"error": msg}, status_code=400)
         target_format = render_options.types
         if target_format is None:
             target_format = "png"
