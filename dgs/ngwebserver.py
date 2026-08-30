@@ -173,7 +173,16 @@ class DiagramsSolution(InputWebSolution):
         self.markup_dict = {}
         self.output_type_dict = {"png": "png"}
         self.output_type = "png"
-     
+
+    async def setup_footer(self):
+        """
+        setup the footer with a client local log only
+
+        handle_logging=False keeps root logger records - e.g. the nicegui
+        404 handler for scanner probes - out of every client log view
+        """
+        await super().setup_footer(handle_logging=False)
+
     def on_render(self, _e):
         """
         action when render button has been clicked
