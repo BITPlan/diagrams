@@ -18,7 +18,7 @@ Online diagrams-Service supporting graphviz, mscgen and plantuml markup
 * Python 3.10 up to 3.13
 
 ### Demo
-* [demo](http://diagrams.bitplan.com)
+* [demo](https://diagrams.bitplan.com)
 
 ### Authors
 * [Wolfgang Fahl](http://www.bitplan.com/Wolfgang_Fahl)
