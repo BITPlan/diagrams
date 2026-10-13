@@ -3,6 +3,7 @@ Created on 2023-10-06
 
 @author: wf
 """
+
 import sys
 from argparse import ArgumentParser
 
@@ -21,7 +22,9 @@ def main(argv: list = None):
     """
     main call
     """
-    cmd = DiagramsCmd(config=DiagramsWebServer.get_config(),webserver_cls=DiagramsWebServer)
+    cmd = DiagramsCmd(
+        config=DiagramsWebServer.get_config(), webserver_cls=DiagramsWebServer
+    )
     exit_code = cmd.cmd_main(argv)
     return exit_code
 

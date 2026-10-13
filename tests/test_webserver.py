@@ -3,11 +3,14 @@ Created on 2023-10-07
 
 @author: wf
 """
+
+import json
+
 from ngwidgets.webserver_test import WebserverTest
 from starlette.responses import Response
 
-from dgs.ngwebserver import DiagramsWebServer
 from dgs.diagrams_cmd import DiagramsCmd
+from dgs.ngwebserver import DiagramsWebServer
 
 
 class TestWebserver(WebserverTest):
@@ -94,9 +97,14 @@ a->b
         expected_json = """{
   "diagrams": {
     "png": {
-      "url": "http://testserver/png/0x338668b9.png"
+      "url": "http://testserver/render/png/0x338668b9.png"
     }
   }
 }"""
         self.assertEqual(expected_json, json_text)
-        pass
+        # the answered url must be served, see https://github.com/BITPlan/diagrams/issues/21
+        url = json.loads(json_text)["diagrams"]["png"]["url"]
+        image_response = self.client.get(url)
+        self.assertEqual(200, image_response.status_code)
+        self.assertEqual("image/png", image_response.headers["content-type"])
+        self.assertTrue(image_response.content.startswith(b"\x89PNG"))

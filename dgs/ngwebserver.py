@@ -3,6 +3,7 @@ Created on 2023-10-06
 
 @author: wf
 """
+
 import os
 from typing import Any
 
@@ -54,7 +55,7 @@ class DiagramsWebServer(InputWebserver):
         InputWebserver.__init__(self, config=DiagramsWebServer.get_config())
         self.output_path = None
         self.generators = Generators.generators()
-        
+
         @app.get("/example/{generator:str}")
         def example(generator: str):
             return self.example(generator)
@@ -71,7 +72,6 @@ class DiagramsWebServer(InputWebserver):
         async def render_service(render_options: RenderOptions, request: Request):
             return await self.render_service(render_options, request)
 
-    
     @classmethod
     def examples_path(cls) -> str:
         # the root directory (default: examples)
@@ -161,12 +161,14 @@ class DiagramsWebServer(InputWebserver):
         result_json = result.asJson(request.base_url)
         response = JSONResponse(content=result_json)
         return response
-    
-class DiagramsSolution(InputWebSolution): 
+
+
+class DiagramsSolution(InputWebSolution):
     """
     diagrams client specific UI
     """
-    def __init__(self, webserver:DiagramsWebServer, client: Client):
+
+    def __init__(self, webserver: DiagramsWebServer, client: Client):
         super().__init__(webserver, client)  # Call to the superclass constructor
         self.generator_id = "graphviz"
         self.alias = "dot"
@@ -284,10 +286,10 @@ class DiagramsSolution(InputWebSolution):
                     with ui.row():
                         self.gen_result = ui.html()
         self.selectGenerator(self.generator_id)
-        
+
     async def home(self):
         """
         provide the main content page
 
         """
-        await(self.setup_content_div(self.setup_home))
+        await self.setup_content_div(self.setup_home)

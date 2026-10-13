@@ -133,7 +133,9 @@ class Generators(object):
                 return gen.id
         return None
 
-    DOWNLOAD_URL = "http://sourceforge.net/projects/plantuml/files/plantuml.jar/download"
+    DOWNLOAD_URL = (
+        "http://sourceforge.net/projects/plantuml/files/plantuml.jar/download"
+    )
 
     @staticmethod
     def plantuml_jar_path():
@@ -301,7 +303,7 @@ class GenerateResult(object):
             json_txt = f"""{{
   "diagrams": {{
     "{self.outputType}": {{
-      "url": "{baseurl}/{self.outputType}/{self.crc32}.{self.outputType}"
+      "url": "{baseurl}/render/{self.outputType}/{self.crc32}.{self.outputType}"
     }}
   }}
 }}"""

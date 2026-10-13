@@ -3,6 +3,7 @@ Created on 2023-10-05
 
 @author: wf
 """
+
 from ngwidgets.yamlable import lod_storable
 
 import dgs
@@ -13,6 +14,7 @@ class Version:
     """
     Version handling for diagrams
     """
+
     name = "diagrams"
     version = dgs.__version__
     date = "2020-02-14"
