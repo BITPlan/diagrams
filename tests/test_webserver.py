@@ -90,20 +90,17 @@ a->b
             },
         )
         self.assertEqual(200, response.status_code)
-        json_text = response.json()
+        # the answer is a json object, not a json string - see issue #23
+        result = response.json()
         debug = self.debug
         if debug:
-            print(json_text)
-        expected_json = """{
-  "diagrams": {
-    "png": {
-      "url": "http://testserver/render/png/0x338668b9.png"
-    }
-  }
-}"""
-        self.assertEqual(expected_json, json_text)
+            print(json.dumps(result, indent=2))
+        expected = {
+            "diagrams": {"png": {"url": "http://testserver/render/png/0x338668b9.png"}}
+        }
+        self.assertEqual(expected, result)
         # the answered url must be served, see https://github.com/BITPlan/diagrams/issues/21
-        url = json.loads(json_text)["diagrams"]["png"]["url"]
+        url = result["diagrams"]["png"]["url"]
         image_response = self.client.get(url)
         self.assertEqual(200, image_response.status_code)
         self.assertEqual("image/png", image_response.headers["content-type"])
@@ -127,6 +124,6 @@ a->b
             },
         )
         self.assertEqual(200, response.status_code)
-        json_text = response.json()
-        url = json.loads(json_text)["diagrams"]["png"]["url"]
+        result = response.json()
+        url = result["diagrams"]["png"]["url"]
         self.assertEqual("http://testserver/render/png/0x338668b9.png", url)

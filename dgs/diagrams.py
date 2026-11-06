@@ -273,41 +273,42 @@ class GenerateResult(object):
         valid = os.path.isfile(self.path) and not self.errMsg()
         return valid
 
-    def asJson(self, baseurl: str) -> str:
+    def asDict(self, baseurl: str) -> dict:
         """
-        Generate a JSON representation of the result.
-
-        This function generates a JSON representation of a diagram (or an error)
-        to be used by the Mediawiki diagrams extension.
+        Generate the dict representation of the result as the Mediawiki
+        diagrams extension expects it, see issue #23
 
         Args:
             baseurl (str): The base URL where the generated diagram can be found.
 
         Returns:
-            str: A JSON string containing either the URL to the generated diagram
+            dict: either the URL to the generated diagram per output type
             or an error message if diagram generation failed.
         """
-        error_message = self.errMsg()  # Assuming `err_msg` is a method in your class
-
+        error_message = self.errMsg()
         # Removing trailing slash from baseurl if present
         baseurl = str(baseurl).rstrip("/")
-
         if error_message:
-            # Using f-string and json.dumps for better readability and handling of special characters in error_message
-            json_txt = f"""{{
-                "error": "generating {self.outputType} failed",
-                "message": {json.dumps(error_message)}
-            }}"""
+            result = {
+                "error": f"generating {self.outputType} failed",
+                "message": error_message,
+            }
         else:
-            # Using f-string for better readability
-            json_txt = f"""{{
-  "diagrams": {{
-    "{self.outputType}": {{
-      "url": "{baseurl}/render/{self.outputType}/{self.crc32}.{self.outputType}"
-    }}
-  }}
-}}"""
+            url = f"{baseurl}/render/{self.outputType}/{self.crc32}.{self.outputType}"
+            result = {"diagrams": {self.outputType: {"url": url}}}
+        return result
 
+    def asJson(self, baseurl: str) -> str:
+        """
+        Generate a JSON representation of the result.
+
+        Args:
+            baseurl (str): The base URL where the generated diagram can be found.
+
+        Returns:
+            str: the JSON text of asDict
+        """
+        json_txt = json.dumps(self.asDict(baseurl), indent=2)
         return json_txt
 
 

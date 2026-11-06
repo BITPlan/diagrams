@@ -182,8 +182,9 @@ class DiagramsWebServer(InputWebserver):
         result = gen.generate(
             render_options.markup, render_options.source, target_format
         )
-        result_json = result.asJson(request.base_url)
-        response = JSONResponse(content=result_json)
+        # the answer is the json object, not its text - see issue #23
+        result_dict = result.asDict(request.base_url)
+        response = JSONResponse(content=result_dict)
         return response
 
 
