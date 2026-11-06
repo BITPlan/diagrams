@@ -69,8 +69,8 @@ class DiagramsWebServer(InputWebserver):
             return self.render(output_type, crc32)
 
         @app.post("/render")
-        async def render_service(render_options: RenderOptions, request: Request):
-            return await self.render_service(render_options, request)
+        async def render_service(request: Request):
+            return await self.render_service(request)
 
     @classmethod
     def examples_path(cls) -> str:
@@ -134,10 +134,34 @@ class DiagramsWebServer(InputWebserver):
 
         return response
 
-    async def render_service(self, render_options: RenderOptions, request: Request):
+    async def get_render_options(self, request: Request) -> RenderOptions:
         """
-        handle post request
+        read the render options from the body of a post request
+
+        A JSON body is read as such; any other body, e.g. the form-encoded
+        post of the MediaWiki Diagrams extension, is read as form data -
+        see issue #22
+
+        Args:
+            request: the post request
+
+        Returns:
+            RenderOptions: the render options of the request
         """
+        content_type = request.headers.get("content-type", "")
+        if content_type.startswith("application/json"):
+            body = await request.json()
+        else:
+            form = await request.form()
+            body = dict(form)
+        render_options = RenderOptions(**body)
+        return render_options
+
+    async def render_service(self, request: Request):
+        """
+        handle a render post request with a JSON or a form-encoded body
+        """
+        render_options = await self.get_render_options(request)
         # resolve generator by id, falling back to alias resolution
         # (e.g. "graphviz"/"dot") - see issue #13
         gen = Generators.get(render_options.generator)

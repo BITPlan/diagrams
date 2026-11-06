@@ -108,3 +108,25 @@ a->b
         self.assertEqual(200, image_response.status_code)
         self.assertEqual("image/png", image_response.headers["content-type"])
         self.assertTrue(image_response.content.startswith(b"\x89PNG"))
+
+    def test_render_service_form(self):
+        """
+        test the render service with a form-encoded body as posted by the
+        MediaWiki Diagrams extension, see https://github.com/BITPlan/diagrams/issues/22
+        """
+        response = self.client.post(
+            "/render/",
+            data={
+                "generator": "graphviz",
+                "markup": "dot",
+                "source": """digraph d {
+a->b
+}
+""",
+                "types": "png",
+            },
+        )
+        self.assertEqual(200, response.status_code)
+        json_text = response.json()
+        url = json.loads(json_text)["diagrams"]["png"]["url"]
+        self.assertEqual("http://testserver/render/png/0x338668b9.png", url)
