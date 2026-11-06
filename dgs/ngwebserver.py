@@ -28,7 +28,23 @@ class RenderOptions(BaseModel):
     generator: str
     source: str
     markup: str = "dot"
-    types: str | None = None
+    # one output type or a list of output types, the first one is rendered
+    types: str | list[str] | None = None
+
+    def get_target_format(self) -> str:
+        """
+        get the output format to render
+
+        Returns:
+            str: the first of the wanted types, png when none is given
+        """
+        target_format = "png"
+        if isinstance(self.types, list):
+            if len(self.types) > 0:
+                target_format = self.types[0]
+        elif self.types:
+            target_format = self.types
+        return target_format
 
 
 class DiagramsWebServer(InputWebserver):
@@ -153,7 +169,17 @@ class DiagramsWebServer(InputWebserver):
             body = await request.json()
         else:
             form = await request.form()
-            body = dict(form)
+            body = {}
+            types = []
+            # PHP style array keys types[], types[0], types[1] ... as the
+            # MediaWiki Diagrams extension sends them - see issue #24
+            for key, value in form.multi_items():
+                if key == "types" or key.startswith("types["):
+                    types.append(value)
+                else:
+                    body[key] = value
+            if types:
+                body["types"] = types
         render_options = RenderOptions(**body)
         return render_options
 
@@ -176,9 +202,7 @@ class DiagramsWebServer(InputWebserver):
                 f"- known generators: {', '.join(known)}"
             )
             return JSONResponse(content={"error": msg}, status_code=400)
-        target_format = render_options.types
-        if target_format is None:
-            target_format = "png"
+        target_format = render_options.get_target_format()
         result = gen.generate(
             render_options.markup, render_options.source, target_format
         )

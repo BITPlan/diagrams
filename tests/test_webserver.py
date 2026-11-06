@@ -127,3 +127,22 @@ a->b
         result = response.json()
         url = result["diagrams"]["png"]["url"]
         self.assertEqual("http://testserver/render/png/0x338668b9.png", url)
+
+    def test_render_service_types_array(self):
+        """
+        test the render service with the PHP style types array of the
+        MediaWiki Diagrams extension, see https://github.com/BITPlan/diagrams/issues/24
+        """
+        response = self.client.post(
+            "/render/",
+            data={
+                "generator": "graphviz",
+                "source": "digraph d { a->b }",
+                "types[0]": "svg",
+                "types[1]": "cmapx",
+            },
+        )
+        self.assertEqual(200, response.status_code)
+        result = response.json()
+        self.assertIn("svg", result["diagrams"])
+        self.assertTrue(result["diagrams"]["svg"]["url"].endswith(".svg"))
