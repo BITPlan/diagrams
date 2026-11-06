@@ -183,6 +183,25 @@ class DiagramsWebServer(InputWebserver):
         render_options = RenderOptions(**body)
         return render_options
 
+    def get_base_url(self, request: Request) -> str:
+        """
+        get the base url the diagram urls are built from
+
+        Behind a TLS terminating proxy the request arrives as http; the
+        scheme and host the client used come with the X-Forwarded-Proto
+        and X-Forwarded-Host headers - see issue #25
+
+        Args:
+            request: the post request
+
+        Returns:
+            str: the base url with the scheme and host of the client
+        """
+        scheme = request.headers.get("x-forwarded-proto", request.url.scheme)
+        host = request.headers.get("x-forwarded-host", request.url.netloc)
+        base_url = f"{scheme}://{host}/"
+        return base_url
+
     async def render_service(self, request: Request):
         """
         handle a render post request with a JSON or a form-encoded body
@@ -207,7 +226,7 @@ class DiagramsWebServer(InputWebserver):
             render_options.markup, render_options.source, target_format
         )
         # the answer is the json object, not its text - see issue #23
-        result_dict = result.asDict(request.base_url)
+        result_dict = result.asDict(self.get_base_url(request))
         response = JSONResponse(content=result_dict)
         return response
 

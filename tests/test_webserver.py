@@ -146,3 +146,24 @@ a->b
         result = response.json()
         self.assertIn("svg", result["diagrams"])
         self.assertTrue(result["diagrams"]["svg"]["url"].endswith(".svg"))
+
+    def test_render_service_behind_proxy(self):
+        """
+        test that the diagram url carries the scheme and host of a TLS
+        terminating proxy, see https://github.com/BITPlan/diagrams/issues/25
+        """
+        response = self.client.post(
+            "/render/",
+            headers={
+                "X-Forwarded-Proto": "https",
+                "X-Forwarded-Host": "diagrams.example.org",
+            },
+            data={
+                "generator": "graphviz",
+                "source": "digraph d { a->b }",
+                "types": "png",
+            },
+        )
+        self.assertEqual(200, response.status_code)
+        url = response.json()["diagrams"]["png"]["url"]
+        self.assertTrue(url.startswith("https://diagrams.example.org/render/png/"))
